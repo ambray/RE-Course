@@ -9,14 +9,33 @@ An Introduction to Reverse Engineering
 Intro to Reverse Engineering
 ============================
 
-* TODO: clever intro title here
+.. code:: 
+
+	0:000> da 00d010d8
+	00d010d8 "Instructor | email"
+	0:000> da 00d014a0
+	00d011a "Aaron Bray | aaron.m.bray@gmail.com"
 
 ----
 
 Course Roadmap
 ==============
 
-* TODO: clever roadmap thing here
+.. code::
+
+	0:000> dt demo!_COURSE_ROADMAP
+   		+0x000 Introduction     : Uint4B
+   		+0x004 IntroDynamicAnalysis : Uint4B
+   		+0x008 IntroStaticAnalysis : Uint2B
+   		+0x00a IntroToCompilers : Uint2B
+   		+0x00c WindowsInternalsPrimer : UChar
+   		+0x00d DynamicRuntimeLinking : UChar
+   		+0x00e ExecutableFileFormats : UChar
+   		+0x00f LinkingAndLoading : UChar
+   		+0x010 BinaryAnalysisConcepts : Uint4B
+   		+0x014 CompilerOptimizations : Uint4B
+   		+0x018 CPlusPlus        : Uint4B
+   		+0x01c AdditionalTopics : Uint4B
 
 ----
 
@@ -39,7 +58,22 @@ Reverse Engineering
 ===================
 
 * Process of determining how a program (or set of programs) works (typically without access to source code)
-* 
+* Wide variety of motivations
+
+----
+
+Types of Analysis
+=================
+
+* Dynamic Analysis
+	+ Focus on watching what happens at run time
+	+ Debuggers and whole-system monitoring tools (such as procmon/procexplorer) may be utilized
+* Static Analysis
+	+ Focus on looking at disassembly, file sections and headers, etc
+	+ Tools such as IDA Pro, radare2, and CFF Explorer, or python libraries such as pefile or elftools may be employed
+	+ Other tools such as strings are also frequently used
+* Combination
+	+ May use both static and dynamic analysis to get results
 
 ----
 
@@ -52,8 +86,433 @@ Objectives
 ==========
 
 * Understand and utilize, at a basic level, principles relating to dynamic analysis
+* Understand the basic operation of debuggers
 * Utilize, at a basic level, Windbg for the purpose of dynamic analysis
 * Utilize, at a basic level, the Sysinternals tools for the purpose of dynamic analysis
+
+----
+
+Dynamic Analysis Tools
+======================
+
+* \*mon tools (sysinternals) - Rather powerful instrumenting tools that give a good view of resource usage
+* Debuggers - Allow us to inspect and trace through the execution of a given application
+* (Linux) strace - Gives a list of system calls used by a given application
+
+----
+
+Procmon
+=======
+
+* Can give lots of good information about process accesses
+* Lots of filter options that can be leveraged
+* Provides a good amount of insight into application I/O activity
+
+----
+
+Process Explorer
+================
+
+* Gives a great deal of useful information about what system resources a given process is interacting with
+* Can view lots of good details regarding kernel objects accessed
+* We will discuss this in greater detail later
+
+----
+
+Debuggers, How do they work, anyhow?
+====================================
+
+Basic Workflow:
+
+* Open process
+* Read/Modify memory
+* Read/Modify register state
+
+----
+
+Breakpoints
+===========
+
+Two Varieties: Hardware and Software
+
+* Hardware - Utilizes Debug Registers
+	+ Limited in number (DR0-3 on x86)
+	+ Each register holds a linear address
+	+ DR7 (the control register) dictates the condition to break on (read/write/execute)
+	+ On some platforms (e.g., Linux), they require running in kernel mode to set/modify
+
+* Software - the int3 (0xCC) instruction
+
+----
+
+Windbg
+======
+
+* The debugger we'll focus on in this course
+* Doubles as both a user and kernel mode debugger
+* Somewhat steep learning curve, but very aware of Windows internal state
+* Lots of extremely useful extensions built-in
+
+----
+
+Windbg Displays
+===============
+
+* All available via the "View" menu
+* All act as snap-ins for the Windbg console
+* Many times commands exist to display the same information
+* Workspace can be saved/loaded between debugging sessions
+
+----
+
+Windbg View List
+================
+
+* Command - Interactive Command Prompt
+* Watch - Watch window for manually specified/defined variables (castable to other types)
+* Locals - Local variables visible in the current scope
+* Registers - Editable register display
+* Memory - An editable memory view; can display in a variety of formats (defaults to hex bytes)
+* Call Stack - Displays the call stack relative to the current location
+* Disassembly - Disassembly Window
+
+----
+
+Windbg - Breakpoints
+====================
+
+* Hardware: ba [Access: r|e|w] [Size: 1|2|4] <address>
+* Software: bp <address/location>
+
+* Listing: bl
+* Disable: bd
+* Enable: be
+* Clearing: bc <breakpoint number>
+
+----
+
+Symbols and Debugging
+=====================
+
+* What are debugging symbols?
+	+ Symbolic information normally discarded during the compilation process
+	+ Typically used to aid in debugging
+	+ Microsoft provides stripped-down symbols for _most_ windows binaries
+	+ Many otherwise-undocumented structures are exposed this way
+* PDB - Documentation available via github: https://github.com/Microsoft/microsoft-pdb
+* DWARF - http://dwarfstd.org
+
+----
+
+Symbols and Modules
+===================
+
+* Handout on symbol configuration and issues
+* Looking at Modules in a Process
+	+ (windbg) lm 	- Lists the loaded modules (executable files) in a process
+	+ (windbg) x <module>!<pattern> 	- Lists symbols exported by <module> that match <pattern>
+
+----
+
+Example: Examining Exported Symbols
+===================================
+
+.. code::
+
+	0:000> lm
+	start    end        module name
+	006a0000 006a5000   demo       (deferred)             
+	744c0000 7463e000   KERNELBASE   (deferred)             
+	74730000 74810000   KERNEL32   (deferred)             
+	77090000 7714e000   msvcrt     (deferred)             
+	771f0000 7736b000   ntdll      (pdb symbols) <path>
+	0:000> x ntdll!ZwQuerySystem*
+	77266f30          ntdll!ZwQuerySystemInformation (<no parameter info>)
+	77267170          ntdll!ZwQuerySystemTime (<no parameter info>)
+	77268050          ntdll!ZwQuerySystemEnvironmentValue (<no parameter info>)
+	77268060          ntdll!ZwQuerySystemEnvironmentValueEx (<no parameter info>)
+	77268070          ntdll!ZwQuerySystemInformationEx (<no parameter info>)
+
+----
+
+Displaying Data
+===============
+
+Dumping data at a location:
+
+* (windbg) db <location> 	 - dump as bytes 
+* (windbg) dw/d/q <location> - dump as WORDs/DWORDs/QWORDs
+* (windbg) da <location> 	 - dump as ASCII
+* (windbg) du <location> 	 - dump as Unicode
+
+----
+
+Searching
+=========
+
+* (windbg) s 	- Search memory
+
+----
+
+Registers and Pointers
+======================
+
+Register information:
+
+* (windbg) r 	- Displays the current values stored in registers
+
+Dumping Pointer Data:
+
+* (windbg) dp <location> 	- Dump as pointer
+* (windbg) poi(<location>)	- Dereference pointer
+
+Examining a pointer in a register:
+
+.. code::
+
+	0:000> r
+	eax=00d610bc ebx=00000000 ecx=771049b3 edx=00000000 esi=00000001 edi=00d6367c
+	eip=00d61251 esp=000cfc58 ebp=000cfc58 iopl=0         nv up ei pl nz na po nc
+	cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000202
+	demo!main+0x31:
+	00d61251 cc              int     3
+	0:000> da @eax
+	00d610bc  "abcdef"
+
+
+----
+
+Disassembling
+=============
+
+* In addition to the disassembly window, Windbg has the ability to disassemble both forward and backward
+	+ (windbg) u <location> 	- unassemble forward
+	+ (windbg) ub <location> 	- unassemble backward
+	+ (windbg) uf <location> 	- unassemble function
+
+.. code::
+	
+	0:000> x ntdll!ZwQuerySystem*
+	77266f30          ntdll!ZwQuerySystemInformation (<no parameter info>)
+	77267170          ntdll!ZwQuerySystemTime (<no parameter info>)
+	77268050          ntdll!ZwQuerySystemEnvironmentValue (<no parameter info>)
+	77268060          ntdll!ZwQuerySystemEnvironmentValueEx (<no parameter info>)
+	77268070          ntdll!ZwQuerySystemInformationEx (<no parameter info>)
+	0:000> u 77266f30          
+	ntdll!NtQuerySystemInformation:
+	77266f30 b836000000      mov     eax,36h
+	77266f35 bab0b52777      mov     edx,offset ntdll!Wow64SystemServiceCall (7727b5b0)
+	77266f3a ffd2            call    edx
+	77266f3c c21000          ret     10h
+	77266f3f 90              nop
+	ntdll!NtOpenSection:
+	77266f40 b837000000      mov     eax,37h
+	77266f45 bab0b52777      mov     edx,offset ntdll!Wow64SystemServiceCall (7727b5b0)
+	77266f4a ffd2            call    edx
+
+----
+
+Stepping
+========
+
+Single step-in/over:
+
+* (windbg) t 		- Trace - Single Step/step in
+* (windbg) p 		- Step Over
+
+More complex step operations:
+0:000> r
+eax=00d610bc ebx=00000000 ecx=771049b3 edx=00000000 esi=00000001 edi=00d6367c
+eip=00d61251 esp=000cfc58 ebp=000cfc58 iopl=0         nv up ei pl nz na po nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000202
+demo!main+0x31:
+00d61251 cc              int     3
+0:000> da @eax
+00d610bc  "abcdef"
+
+* (windbg) tc/pc 	- Trace or Step to Call
+* (windbg) tb 		- Trace to next branch (jmp or jcc)
+
+----
+
+Patching Memory
+===============
+
+Windbg can directly edit memory during operation
+
+* Bytes can be overwritten in the memory view window
+* Windbg can also assemble in-place (essentially replacing instructions) 
+	+ (windbg) a <location>  	- Allows us to begin assembling starting at the given <location>
+	+ Once you start, you can continue to assemble you hit enter on an empty line
+* There is also an "edit memory" command:
+	+ (windbg) e(b|d|w) <location> <value>
+
+
+----
+
+Hypothetical Crackme
+====================
+
+.. code:: 
+
+	demo!main:
+	00ac1200 8bff            mov     edi,edi
+	00ac1202 55              push    ebp
+	00ac1203 8bec            mov     ebp,esp
+	00ac1205 cc              int     3
+	00ac1206 b801000000      mov     eax,1
+	00ac120b 85c0            test    eax,eax
+	00ac120d 7402            je      demo!main+0x11 (00ac1211)
+	00ac120f eb14            jmp     demo!main+0x25 (00ac1225)
+	00ac1211 6a00            push    0
+	00ac1213 68cc10ac00      push    offset demo!`string' (00ac10cc)
+	00ac1218 68bc10ac00      push    offset demo!`string' (00ac10bc)
+	00ac121d 6a00            push    0
+	00ac121f ff153c10ac00    call    dword ptr [demo!_imp__MessageBoxA (00ac103c)]
+	00ac1225 33c0            xor     eax,eax
+	00ac1227 5d              pop     ebp
+	00ac1228 c3              ret
+
+
+
+.. note::
+	
+	* Breakpoint at 00ac1205 (line 4)
+	* Comparison at 00ac120b (line 6) will always fail, and the "je" will be skipped
+	* The unconditional jump at 00ac120f (line 8) will take us to essentially the end of the function.
+	* How can we fix this, so that the "je" path gets taken?
+
+----
+
+Patching Some Bytes
+===================
+
+One option:
+
+.. code::
+
+	00ac1206 b801000000      mov     eax,1
+	00ac120b 85c0            test    eax,eax
+	00ac120d 7402            je      demo!main+0x11 (00ac1211)
+
+* How can we make this case true?
+
+----
+
+Patching Some Bytes
+===================
+
+* If we can make eax equal to zero, the jump will get taken
+
+We now need to make this:
+
+.. code:: 
+
+	00ac1206 b801000000      mov     eax,1
+
+Look like this:
+
+.. code::
+
+	00ac1206 b800000000      mov     eax,0
+
+----
+
+Memory Window
+=============
+
+.. image:: ./img/Sec1_FirstExampleMemoryWindow.png
+
+----
+
+Memory Window (Part 2)
+======================
+
+.. image:: ./img/Sec1_FirstExampleMemoryWindow_p2.png
+
+----
+
+Result
+======
+
+.. code::
+
+	demo!main:
+	00ac1200 8bff            mov     edi,edi
+	00ac1202 55              push    ebp
+	00ac1203 8bec            mov     ebp,esp
+	00ac1205 cc              int     3
+	00ac1206 b800000000      mov     eax,0
+	00ac120b 85c0            test    eax,eax
+	00ac120d 7402            je      demo!main+0x11 (00ac1211)
+	00ac120f eb14            jmp     demo!main+0x25 (00ac1225)
+	00ac1211 6a00            push    0
+	00ac1213 68cc10ac00      push    offset demo!`string' (00ac10cc)
+	00ac1218 68bc10ac00      push    offset demo!`string' (00ac10bc)
+	00ac121d 6a00            push    0
+	00ac121f ff153c10ac00    call    dword ptr [demo!_imp__MessageBoxA (00ac103c)]
+	00ac1225 33c0            xor     eax,eax
+	00ac1227 5d              pop     ebp
+	00ac1228 c3              ret
+
+----
+
+And Finally...
+==============
+
+.. image:: ./img/Sec1_success.png
+
+----
+
+Alternatively...
+================
+
+Once we get here:
+
+.. code::
+
+	demo!main+0x5:
+	00ac1205 cc              int     3
+	0:000> u
+	demo!main+0x5 [c:\users\dot_15\desktop\creative\main.c @ 9]:
+	00ac1205 cc              int     3
+	00ac1206 b801000000      mov     eax,1
+	00ac120b 85c0            test    eax,eax
+	00ac120d 7402            je      demo!main+0x11 (00ac1211)
+	00ac120f eb14            jmp     demo!main+0x25 (00ac1225)
+	00ac1211 6a00            push    0
+	00ac1213 68cc10ac00      push    offset demo!`string' (00ac10cc)
+	00ac1218 68bc10ac00      push    offset demo!`string' (00ac10bc)
+
+
+----
+
+Assembling
+==========
+
+We could:
+
+.. code::
+
+	0:000> a 00ac1206 
+	00ac1206 mov eax, 0
+	mov eax, 0
+	00ac120b 
+
+Which would also yield the same result:
+
+.. code::
+
+   00ac1206 b800000000      mov     eax,0
+   00ac120b 85c0            test    eax,eax
+   00ac120d 7402            je      demo!main+0x11 (00ac1211)
+
+----
+
+Lab 1
+=====
+
+Patch2Win! // TODO: Implement
 
 ----
 
@@ -70,272 +529,23 @@ Objectives
 
 ----
 
-Compilers - an Introduction
-===========================
+Static Analysis Tools
+=====================
+
+* Strings - A very useful tool for dumping things that \*look\* like printable ASCII or Unicode strings
+	+ For Windows: Ships with Sysinternals
+	+ Linux/Unix: Typically a strings application exists
+* Hex Editors - Sometimes useful
+* Executable file explorers - CFF Explorer, dumpbin, objdump, otool, etc
+	+ Lots of detail about sections and layout of a binary
+	+ Will discuss in greater detail in later sections
+* Disassemblers - IDA Pro, radare2, etc.
+	+ IDA will be our focus for the course
+	+ It is an extremely powerful tool, provides lots of useful features for annotating and investigating various binary formats
 
 ----
 
-Objectives
-==========
+Intro to IDA Pro
+================
 
-* Understand fundamental concepts pertaining to how the compilation process works
-* Understand and identify security mechanisms implemented by compilers
-* Understand and identify some minor optimizations performed by compilers
-* Understand and identify intrinsic methods
-
-----
-
-The Compilation Process
-=======================
-
-* How do we get from a text file to a binary?
-
-----
-
-Lexing: The First Step
-======================
-
-* Text is broken into tokens
-* The "how" is based on language contraints  (e.g., whitespace, semicolons, etc)
-
-----
-
-Parsing
-=======
-
-* The next step in interpreting text
-* Stream of tokens created from lexing are examined here
-* Abstract Syntax Tree (AST) gets built from this
-
-----
-
-Where too from here?
-====================
-
-* Several transformations typically applied
-	+ the original AST gets changed a bit, losing context
-	+ Sometimes something that resembles a pseudo-assembly gets produced here (e.g., llvm ir)
-	+ Typically still has more "intent" (e.g., what the programmer intended to do) encoded than raw assembly/opcodes
-* Optimizations get added here
-* Register spills and variable lifecycle gets analyzed/calculated at this point
-
-----
-
-\... And out comes a binary?
-============================
-
-* Various sections get generated (more on this topic later)
-* Compilation finishes, assembly gets produced, and assembling happens
-* Object files get created
-* Linking occurs
-
-And finally....
-
-* A binary gets created!
-
-----
-
-Compiler Security Features
-==========================
-
-* A number of security features exist (and are now usually implemented by default) for compilers
-* Some are specific to vendors/file formats
-
-----
-
-Stack Canary
-============
-
-* A "cookie" that is added to the stack inside of a function call to indicate that the stack has been corrupted
-* Generally set at function prologue (on stack)
-* Typically checked just prior to function return
-
-----
-
-Stack Canary
-============
-
-.. image:: ./img/stackcookie.png
-
-----
-
-Relocations
-===========
-
-* PE-specific
-* Provide information to fix up addresses on load (more on this topic later)
-* Makes PE files (which are not position-independent) work with ASLR
-
-----
-
-Patch Points
-============
-
-* Microsoft specific
-* Implementation that allows for hotpatching
-* Provides a 2-bytes, idempotent function prelude that can overwritten with a jmp
-* Typically preceded by a 5 byte (in x86, anyhow), writable area to add a bigger jmp
-
-----
-
-Patch Point
-===========
-
-.. code:: nasm
-
-	; patchable area... 5 bytes of space
-	winfunc:
-		mov edi, edi ; two byte reserved patch point
-
-After patch:
-
-.. code:: nasm
-	
-	patched:
-		jmp newloc	; 5-byte jump to real destination
-	winfunc:
-		jmp	patched	; 2-byte relative jump (backward)
-
-----
-
-Patch Point (cont'd)
-====================
-
-Looking at disassembled bytes we'd get something like:
-
-
-Before:
-
-.. code:: objdump-nasm
-
-	0xcc 0xcc 0xcc 0xcc 0xcc	; the prologue
-	0x89 0xff					; the patch point
-
-
-After:
-
-.. code:: objdump-nasm
-
-	0xe9 0xf3 0xf9 0xff 0xff	; the jmp newloc bytes
-	0xeb 0xf9					; the short jmp
-
-----
-
-Windows Internals Primer
-========================
-
-----
-
-Objectives
-==========
-
-* Understand HANDLEs and some of their uses
-* Understand the Windows Object Manager, and how it relates to various kernel objects
-* Understand the general memory layout and composition of a Windows process
-
-----
-
-Binary Analysis
-===============
-
-----
-
-Objectives
-==========
-
-* Understand and utilize a combination of static and dynamic analysis to perform RE
-* Investigate more advanced features of previously mentioned tools, such as procmon, Windbg, and IDA Pro
-
-----
-
-Executable File Formats
-=======================
-
-----
-
-Objectives
-==========
-
-* Understand and Identify the major components of executable file formats
-	+ PE
-	+ ELF
-	+ MACH-O
-* Analyze the composition of provided binaries
-
-----
-
-Loading and Linking
-===================
-
-----
-
-Objectives
-==========
-
-* Understand, at a high level, the process of loading and running executables
-* Understand some of the action performed by the C Runtime (CRT) during initialization
-
-----
-
-Analysis Triage
-===============
-
-----
-
-Objectives
-==========
-
-* Using a combination of static and dynamic analysis techniques, locate interesting items in provided binaries
-
-----
-
-Compilers - Optimizations
-=========================
-
-----
-
-Objectives
-==========
-
-* Understand and identify a number of optimizations performed by compilers
-
-----
-
-C++ From a Binary Perspective
-=============================
-
-----
-
-Objectives
-==========
-
-* Understand and Identify Run Time Type Information (RTTI), and its uses
-* Understand and Identify C++ Class Layouts in memory
-* Understand how Inheritance Affects C++ in-memory structure
-* Understand the composition of C++ class memory functions and vtables
-* Understand and Identify the affect of C++ Templates on generated code
-
-----
-
-Additional Topics
-=================
-
-As time permits...
-
-----
-
-Objectives
-==========
-
-* Rust
-* Go
-* SEH
-* Crypto Constants
-* Anti-debugging techniques
-* Forensics?
-* ??
-
-----
-
-Review
-======
+S
