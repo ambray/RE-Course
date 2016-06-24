@@ -51,6 +51,7 @@ Objectives
 
 * Understand the basic goals of RE
 * Introduce various types of analysis
+* Identify translation of basic constructs from C to Assembly
 
 ----
 
@@ -509,6 +510,40 @@ Which would also yield the same result:
 
 ----
 
+Problems with This Demo
+=======================
+
+* This entire demo is predicated on having symbols
+* Many times, symbols will not be available
+* Program's real entry point (e.g., main) will have to be located
+
+----
+
+How to Proceed
+==============
+
+* $exentry will give the target binary's entry point
+* Getting to main will require wading through crt startup code
+* Fortunately, CRT source is provided via Visual Studio
+	+ Initialization steps are fairly similar
+	+ mcrtexe.cpp - under "vcruntime" (VS2015)
+	+ Other files exist, for other subsystems
+
+----
+
+Other Suggestions
+=================
+
+* Look for functions that will likely be called sometime during CRT initialization and set breakpoints
+	+ Be aware of differences between XP and Windows Vista+ - some Kernel32 functions now live in KERNELBASE
+	+ Good targets might be environment and command line setup (e.g., GetCommandLineA|W, GetEnviron)
+* Can also look for CRT methods that may be equivalent, if those methods are not in the imports list
+	+ __getmainargs
+* Examining the number of args in the string (e.g., "da <arglist>" after GetCommandLineA returns) yields argc
+* Tracing to next call (tc or pc), and examining args passed to function will help to locate entry point
+
+----
+
 Lab 1
 =====
 
@@ -548,4 +583,132 @@ Static Analysis Tools
 Intro to IDA Pro
 ================
 
-S
+----
+
+Starting Up
+===========
+
+* IDA Allows you to save and load work between sessions via database files
+* Annotations and other items can be stored and distributed this way
+
+----
+
+Basic Areas
+===========
+
+* Functions Window
+* Overview Navigator
+* Graph Overview
+* Views section
+
+----
+
+Functions Window
+================
+
+* IDA will load blocks of code that resemble functions here
+* Many of them will initially be named "sub_\*"
+	+ Can be renamed later, as functionality is uncovered
+	+ A subset may have specific names on load, from symbols, functionality, etc
+
+----
+
+IDA View and Hex View
+=====================
+
+* Provides a disassembly view of a section of code
+* Can toggle between viewing the disassembly via text view and graph view
+* Hex view gives a view in hex bytes, or other formats
+	+ Selecting a block of opcodes highlights the whole instruction (if in hex)
+	+ Can synchronize selections with IDA View
+
+----
+
+Structures and Enums
+====================
+
+* Sections let you define structures and enum values
+* Some structure definitions may be populated via type libs and symbols
+	+ Many Windows functions and parameters, for example, may be annotated in this fashion
+
+----
+
+Imports and Exports
+===================
+
+* Imports indicate libraries and external functions a binary relies on
+* Exports denote exported symbols
+	+ May identify methods exported for use by other modules
+	+ Various other entry points, such as the CRT entry point or TLS callbacks, may appear here
+* This topic will be covered in greater depth when discussing executable file formats
+
+----
+
+Useful Features
+===============
+
+* XREFS
+* Annotations
+	+ Comments
+	+ Renaming
+* Mapping Structure Definitions
+* Jump to location
+
+----
+
+XREFS
+=====
+
+* Hotkey: x (from IDA View)
+* Gives a list of references to an item from the binary
+* Double-clicking entries in the list will jump to that location
+
+----
+
+Renaming
+========
+
+* Hotkey: n (from IDA View)
+* Allows symbols to be renamed as functionality is discovered
+	+ Makes it easy to refer back to blocks of code
+	+ Functions (in the Functions Window) can also be renamed via right-click and edit (or Ctrl+E)
+
+----
+
+Comments
+========
+
+* Hotkey: ; or : (from IDA View)
+	+ ; - Repeatable comments
+	+ : - Single comment
+* Repeatable comments will appear at each occurrence of the symbol
+* Single comments will only appear where designated
+
+----
+
+Structure Definitions
+=====================
+
+* Hotkey: t (from IDA View)
+* Maps a structure definitions (from the Structures tab) to a particular location in memory
+
+----
+
+Jump to Location
+================
+
+* Hotkey: enter (from IDA View)
+* Jumps the focus of the IDA View window to the definition of the symbol
+	+ This includes functions and jump targets
+	+ Uninitialized data from other sections in the file (such as .data or .bss) can be viewed in this fashion
+	+ As can global constants, such as strings
+
+----
+
+Other Useful Things
+===================
+
+* Clicking a symbol or register highlights its use
+* Can edit opcodes via hex view
+* Can generate a graph of uses for a particular symbol
+* Same principles discussed in previous section applies in terms of identifying user-defined entry point
