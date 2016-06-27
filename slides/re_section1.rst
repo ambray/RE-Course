@@ -547,7 +547,7 @@ Other Suggestions
 Lab 1
 =====
 
-Patch2Win! // TODO: Implement
+Patch2Win! 
 
 ----
 
@@ -712,3 +712,10 @@ Other Useful Things
 * Can edit opcodes via hex view
 * Can generate a graph of uses for a particular symbol
 * Same principles discussed in previous section applies in terms of identifying user-defined entry point
+
+----
+
+Lab 2
+=====
+
+A basic Crack me
