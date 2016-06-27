@@ -715,7 +715,7 @@ Other Useful Things
 
 ----
 
-Lab 2
-=====
+Labs 2 & 3
+==========
 
 A basic Crack me
