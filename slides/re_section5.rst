@@ -24,30 +24,15 @@ Objectives
 
 ----
 
-Exceptions
-==========
+Approaching C++
+===============
 
-
-----
-
-Structured Exception Handling (SEH)
-===================================
+* Compiler-generated C++ tends to be complex
+* Classes and inheritence create complex structures
+* Member functions may lack direct calls of any kind
 
 ----
 
-C++ Exceptions
-==============
-
-----
-
-\*nix Exceptions
-================
-
-* Vary a bit by implementation
-* Some older implementations relied on setjmp/longjmp
-* Newer libs typically take a table-based approach (similar to Microsoft's)
-
-----
 
 Functions in C++
 ================
@@ -63,37 +48,134 @@ Functions in C++
 A Note on Name Mangling
 =======================
 
-----
-
-Overloaded Functions
-====================
-
-----
-
-Templated Methods
-=================
-
-----
-
-Member Functions
-================
-
+* Name mangling in C++ tends to be much more complex than in C
 
 ----
 
 Classes
 =======
 
+* C++ Class structure can vary a bit based on composition
+* Plain Old Data (POD) types tend to be roughly analagous to C
+* Inherited classes and virtual methods can make class composition quite a bit more complex
+
+----
+
+Identifying Classes
+===================
+
+* Member functions tend to make heavy use of ECX\*, especially if it does not appear to have been initialized
+* The this pointer (passed either via ECX or as the first argument to the function) is a pointer to the top of the current class object.
+
+\* NOTE: this is only true for Microsoft x86 - __thiscall on SYSTEM V and all x86_64 platforms simply pass the this pointer as an implicit first argument
+
 ----
 
 Constructors
 ============
 
+* Constructors may get called in different contexts depending on how the object they back is allocated
+* Global objects get initialized during CRT startup (before main)
+* If stack allocated, call to ctor will be preceded by sub esp, <sizeof(class)>
+* If heap allocated, call to ctor will be preceded by a call to new()
+* In all cases, there will be a mov into ECX
+
+----
+
+Constructors (cont'd)
+=====================
+	
+Given this class:
+
+.. code:: c++
+
+	class TestClass {
+	private:
+		uint32_t inner_;
+	public:
+		TestClass() : inner_(20) { }
+		TestClass(uint32_t t) : inner_(t) {}
+		~TestClass() {}
+
+		uint32_t get() const { return inner_; }
+	}	
+
+----
+
+Constructors: Dynamic
+=====================
+
+.. code:: c++
+
+	TestClass* t = nullptr;
+
+	t = new TestClass(v)
+
+
+.. image:: ./img/ClassDynamicAllocation.png
+
+
+----
+
+Constructors: Stack
+===================
+
+.. code:: c++
+
+	void func()
+	{
+		TestClass t;
+
+		std::cout << "Value from func: " << t.get() << std::endl;
+	}
+
+----
+
+Constructors: Stack
+===================
+
+.. image:: ./img/ClassStackAllocation.png
+
+----
+
+Constructors: Global
+====================
+
+.. code:: c++
+	
+	TestClass gTest(40);
+
+
+	int main(int argc, char** argv)
+	{
+		std::cout << "Value from global: " << gTest.get() << std::endl;
+
+		return 0;
+	}
+
+
+.. image:: ./img/ClassGlobalInitialization.png
+
+----
+
+
+Constructors: Global
+====================
 
 ----
 
 Destructors
 ===========
+
+----
+
+Member Functions
+================
+
+----
+
+Static Methods
+==============
 
 ----
 
@@ -118,8 +200,33 @@ Identifying RTTI
 
 ----
 
-More About Templates
-====================
+Templates
+=========
+
+----
+
+Exceptions
+==========
+
+
+----
+
+Structured Exception Handling (SEH)
+===================================
+
+----
+
+C++ Exceptions
+==============
+
+----
+
+\*nix Exceptions
+================
+
+* Vary a bit by implementation
+* Some older implementations relied on setjmp/longjmp
+* Newer libs typically take a table-based approach (similar to Microsoft's)
 
 ----
 
