@@ -217,10 +217,87 @@ Static Methods
 Thunks
 ======
 
+* A small chunk of code that is called by a function, but will not return
+* Instead it performs some small action, and jumps to a "real" function
+* Target function will return to original calling code
+* May be used to fix up calling conventions, implement closures, or, in some cases, manage virtual function selection (among other things)
+
+----
+
+Class Memory Layout
+===================
+
+* Classes containing virtual member functions get an extra hidden structure member
+* The vfptr (top of structure) points to the class's vtable, which contains pointers to virtual member functions.
+
+----
+
+Class Layout: NormalClass
+=========================
+
+.. code:: c++
+
+	class NormalClass {
+	private:
+		uint32_t a_;
+	public:
+		NormalClass(uint32_t v) : a_(v) {}
+		uint32_t get() const { return a_; }
+	}
+
+NormalClass -> size(4)
+-----------
+0x00: a\_ (4 bytes)
+
+----
+
+Class Layout: NormalClass
+=========================
+
+In action:
+
+.. code:: c++
+	
+	NormalClass n(20);
+	std::cout << "Size: " << sizeof(NormalClass) <<
+	          "\nFirst element: " << *((uint32_t*)&n)
+	          << std::endl;
+
+Output:
+
+.. code:: bash
+
+	Size: 4
+	First Element: 20
+
+----
+
+Class Layout: VirtualClass
+==========================
+
+.. code:: c++
+
+	class VirtualClass {
+	private:
+		uint32_t a_;
+	public:
+		virtual ~VirtualClass() {}
+		VirtualClass(uint32_t v) : a_(v) {}
+		virtual uint32_t get() const { return a_; }
+	};
+
+
+VirtualClass -> size(8)
+------------
+0x00: (vfptr)
+0x04: a\_
+
 ----
 
 Inheritence and Virtual Functions
 =================================
+
+
 
 ----
 
