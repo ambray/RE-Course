@@ -508,6 +508,8 @@ Which would also yield the same result:
    00ac120b 85c0            test    eax,eax
    00ac120d 7402            je      demo!main+0x11 (00ac1211)
 
+\*\*\* CAUTION: Be cautious when doing this, as it can change the meaning of adjacent instructions \*\*\*
+
 ----
 
 Problems with This Demo
