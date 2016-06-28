@@ -98,6 +98,10 @@ Given this class:
 		~TestClass() {}
 
 		uint32_t get() const { return inner_; }
+		void message(const std::string& val) {
+			std::cout <<
+				val << std::endl;
+		}
 	}	
 
 ----
@@ -182,16 +186,36 @@ Destructors (cont'd)
 
 .. image:: ./img/ClassDynamicDtor.png
 
-
 ----
 
 Member Functions
 ================
 
+.. code:: c++
+
+	TestClass* t = new TestClass();
+	t->get();
+
+* Non-virtual member functions use the __thiscall calling convention (MS x86)
+* The "this" pointer, which points to the top of object currently being operated on, is passed via ECX (or as the implicit first argument)
+
 ----
 
 Static Methods
 ==============
+
+.. code:: c++
+
+	TestClass::message("Test");
+
+
+* Generally, these follow somewhat more standard rules regarding calling convention
+* No "this" pointer is passed to static methods
+
+----
+
+Thunks
+======
 
 ----
 
@@ -257,9 +281,9 @@ References
 
 * Sabanal/Yason (IBM) Presentation from Blackhat 2007 - Reversing C++ - https://www.blackhat.com/presentations/bh-dc-07/Sabanal_Yason/Paper/bh-dc-07-Sabanal_Yason-WP.pdf
 
+* The C++ Standard - https://isocpp.org/std/the-standard (current); 
+
 ----
-
-
 
 Additional Topics
 =================
