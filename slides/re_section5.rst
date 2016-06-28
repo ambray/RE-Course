@@ -28,7 +28,7 @@ Approaching C++
 ===============
 
 * Compiler-generated C++ tends to be complex
-* Classes and inheritence create complex structures
+* Classes and inheritance create complex structures
 * Member functions may lack direct calls of any kind
 
 ----
@@ -40,7 +40,7 @@ Functions in C++
 * Function implementation in C++ can vary rather widely
 	+ Overloading 
 	+ Templates
-	+ Member Functions and Inheritence
+	+ Member Functions and Inheritance
 * Also features differences in calling convention and implicit arguments
 
 ----
@@ -230,6 +230,8 @@ Class Memory Layout
 * Classes containing virtual member functions get an extra hidden structure member
 * The vfptr (top of structure) points to the class's vtable, which contains pointers to virtual member functions.
 
+\*\*\* Important Note: The given examples are x86 based, and NOT portable to x64 without changes \*\*\*
+
 ----
 
 Class Layout: NormalClass
@@ -250,7 +252,7 @@ Class Layout: NormalClass
 
 	NormalClass -> size(4)
 	----------------------
-	0x00: | a\_ 
+	0x00: | a_ 
 
 ----
 
@@ -294,7 +296,11 @@ Class Layout: VirtualClass
 	VirtualClass -> size(8)
 	-----------------------
 	0x00: | (vfptr)
-	0x04: | a\_
+	0x04: | a_
+
+	VirtualClass Vtable
+	-------------------
+	0x00: | &VirtualClass::get
 
 ----
 
@@ -310,14 +316,20 @@ Class Layout: VirtualClass2
 		virtual ~VirtualClass2() {}
 		VirtualClass2() : b_(20) {}
 		virtual void stuff() {}
-	}
+		virtual uint32_t getB() const { return b_; }
+	};
 
 .. code::
 
 	VirtualClass2 -> size(8)
 	------------------------
 	0x00: | (vfptr)
-	0x04: | b\_
+	0x04: | b_
+
+	VirtualClass2 Vtable
+	--------------------
+	0x00: | &VirtualClass2::stuff
+	0x04: | &VirtualClass2::getB
 
 ----
 
@@ -333,11 +345,11 @@ Class Layout: InheritedClass
 	private:
 		uint32_t c_;
 	public:
-	 	InheritedClass() : c_(10) {}
+	 	InheritedClass() : c_(10), VirtualClass(30) {}
 	 	virtual void stuff() { 
 	 		MessageBoxA(nullptr, "Stuff", "Stuff", MB_OK);
 	 	}
-	}
+	};
 
 .. code::
 
@@ -345,18 +357,60 @@ Class Layout: InheritedClass
 	--------------------------
 	      | [Base Class VirtualClass]
 	0x00: | VirtualClass::(vfptr)
-	0x04: | VirtualClass::a\_
+	0x04: | VirtualClass::a_
 	      | [Base Class VirtualClass2]
 	0x08: | VirtualClass2::(vfptr)
-	0x0c: | VirtualClass2::b\_
-	0x10: | c\_
+	0x0c: | VirtualClass2::b_
+	0x10: | c_
 
 ----
 
-Inheritence and Virtual Functions
+Class Layout: InheritedClass (cont'd)
+=====================================
+
+.. code::
+
+	InheritedClass's VirtualClass Vtable
+	------------------------------------
+	0x00: | &VirtualClass::get
+
+
+	InheritedClass's VirtualClass2 Vtable
+	-------------------------------------
+	0x00: | &InheritedClass::stuff
+	0x04: | &VirtualClass2::getB
+
+
+----
+
+InheritedClass in Action
+========================
+
+.. code:: c++
+
+	InheritedClass h;
+	uint32_t a, b, c;
+
+	a = *(((uint32_t*)&h)+1); // VirtualClass::a_
+	b = *(((uint32_t*)&h)+3); // VirtualClass2::b_
+	c = *(((uint32_t*)&h)+4); // InheritedClass::c_
+	std::cout << "Size: " << sizeof(h) << "\nA: "
+	          << a << "\nB: " << b << "\nC: " << c
+	          << std::endl;
+
+.. code:: bash
+
+	Size: 20
+	A: 30
+	B: 20
+	C: 10
+
+----
+
+Inheritance and Virtual Functions
 =================================
 
-
+* Calling virtual member functions means
 
 ----
 
