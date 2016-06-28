@@ -126,7 +126,8 @@ Constructors: Stack
 	{
 		TestClass t;
 
-		std::cout << "Value from func: " << t.get() << std::endl;
+		std::cout << "Value from func: " << t.get() 
+		          << std::endl;
 	}
 
 ----
@@ -148,7 +149,8 @@ Constructors: Global
 
 	int main(int argc, char** argv)
 	{
-		std::cout << "Value from global: " << gTest.get() << std::endl;
+		std::cout << "Value from global: " << gTest.get() 
+		          << std::endl;
 
 		return 0;
 	}
@@ -158,14 +160,28 @@ Constructors: Global
 
 ----
 
+Destructors
+===========
 
-Constructors: Global
-====================
+* Compiler ensures they get called when an object is destroyed
+* In a stack allocated object, the dtor will be called prior to stack frame collapse
+* With heap allocated objects, the dtor will be called as part of the delete process, prior to the backing memory getting freed
+* The dtor of global objects gets called during process cleanup, after "main" (or equivalent) returns.
 
 ----
 
-Destructors
-===========
+Destructors (cont'd)
+====================
+
+.. code:: c++
+
+	TestClass* t = nullptr;
+	t = new TestClass(v);
+	// ...
+	delete t
+
+.. image:: ./img/ClassDynamicDtor.png
+
 
 ----
 
