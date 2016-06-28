@@ -214,6 +214,12 @@ in place of memcpy
 
 ----
 
+Lab 5
+=====
+
+
+----
+
 Windows Internals Primer
 ========================
 
