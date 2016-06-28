@@ -249,8 +249,8 @@ Class Layout: NormalClass
 .. code:: 
 
 	NormalClass -> size(4)
-	-----------
-	0x00: | a\_ (4 bytes)
+	----------------------
+	0x00: | a\_ 
 
 ----
 
@@ -292,7 +292,7 @@ Class Layout: VirtualClass
 .. code::
 	
 	VirtualClass -> size(8)
-	------------
+	-----------------------
 	0x00: | (vfptr)
 	0x04: | a\_
 
@@ -315,7 +315,7 @@ Class Layout: VirtualClass2
 .. code::
 
 	VirtualClass2 -> size(8)
-	-------------
+	------------------------
 	0x00: | (vfptr)
 	0x04: | b\_
 
@@ -342,7 +342,7 @@ Class Layout: InheritedClass
 .. code::
 
 	InheritedClass -> size(20)
-	--------------
+	--------------------------
 	      | [Base Class VirtualClass]
 	0x00: | VirtualClass::(vfptr)
 	0x04: | VirtualClass::a\_
