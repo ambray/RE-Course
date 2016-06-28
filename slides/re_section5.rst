@@ -250,7 +250,7 @@ Class Layout: NormalClass
 
 	NormalClass -> size(4)
 	-----------
-	0x00: a\_ (4 bytes)
+	0x00: | a\_ (4 bytes)
 
 ----
 
@@ -293,8 +293,63 @@ Class Layout: VirtualClass
 	
 	VirtualClass -> size(8)
 	------------
-	0x00: (vfptr)
-	0x04: a\_
+	0x00: | (vfptr)
+	0x04: | a\_
+
+----
+
+Class Layout: VirtualClass2
+===========================
+
+.. code:: c++
+
+	class VirtualClass2 {
+	private:
+		uint32_t b_;
+	public:
+		virtual ~VirtualClass2() {}
+		VirtualClass2() : b_(20) {}
+		virtual void stuff() {}
+	}
+
+.. code::
+
+	VirtualClass2 -> size(8)
+	-------------
+	0x00: | (vfptr)
+	0x04: | b\_
+
+----
+
+Class Layout: InheritedClass
+============================
+
+.. code:: c++
+
+	class InheritedClass : 
+	                      public VirtualClass, 
+	                      public VirtualClass2 
+	{
+	private:
+		uint32_t c_;
+	public:
+	 	InheritedClass() : c_(10) {}
+	 	virtual void stuff() { 
+	 		MessageBoxA(nullptr, "Stuff", "Stuff", MB_OK);
+	 	}
+	}
+
+.. code::
+
+	InheritedClass -> size(20)
+	--------------
+	      | [Base Class VirtualClass]
+	0x00: | VirtualClass::(vfptr)
+	0x04: | VirtualClass::a\_
+	      | [Base Class VirtualClass2]
+	0x08: | VirtualClass2::(vfptr)
+	0x0c: | VirtualClass2::b\_
+	0x10: | c\_
 
 ----
 
