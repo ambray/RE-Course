@@ -245,9 +245,12 @@ Class Layout: NormalClass
 		uint32_t get() const { return a_; }
 	}
 
-NormalClass -> size(4)
------------
-0x00: a\_ (4 bytes)
+
+.. code:: 
+
+	NormalClass -> size(4)
+	-----------
+	0x00: a\_ (4 bytes)
 
 ----
 
@@ -286,11 +289,12 @@ Class Layout: VirtualClass
 		virtual uint32_t get() const { return a_; }
 	};
 
-
-VirtualClass -> size(8)
-------------
-0x00: (vfptr)
-0x04: a\_
+.. code::
+	
+	VirtualClass -> size(8)
+	------------
+	0x00: (vfptr)
+	0x04: a\_
 
 ----
 
