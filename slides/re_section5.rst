@@ -410,13 +410,40 @@ InheritedClass in Action
 Inheritance and Virtual Functions
 =================================
 
-* Calling virtual member functions means
+* Calling virtual member functions means first looking up the appropriate vtable entry
+
+.. code:: c++
+
+	InheritedClass* h = new InheritedClass();
+	auto a = h->get();
+
+Translates to:
+
+.. code:: nasm
+
+	mov eax, [ecx]	; vtable
+	call [eax] ; first method
+
 
 ----
 
-Pure Virtual Functions and Purecall
-===================================
+Inheritance and Virtual Functions
+=================================
 
+Similarly,
+
+.. code:: c++
+
+	InheritedClass* h = new InheritedClass();
+	h->stuff();
+
+Translates to:
+
+.. code:: nasm
+
+	lea eax, [ecx + 0x0c] ; Find the right vtable
+	mov eax, [eax] ; Fetch function ptr
+	call eax ; call
 
 ----
 
