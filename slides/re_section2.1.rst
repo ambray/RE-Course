@@ -214,7 +214,7 @@ in place of memcpy
 
 ----
 
-Lab 5
+Lab 6
 =====
 
 

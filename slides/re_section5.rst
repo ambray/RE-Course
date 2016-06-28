@@ -455,7 +455,6 @@ Templates
 Exceptions
 ==========
 
-
 ----
 
 Structured Exception Handling (SEH)
@@ -468,6 +467,14 @@ C++ Exceptions
 
 ----
 
+\*nix Exceptions
+================
+
+* Vary a bit by implementation
+* Some older implementations relied on setjmp/longjmp
+* Newer libs typically take a table-based approach (similar to Microsoft's)
+
+----
 
 Run Time Type Information
 =========================
@@ -483,14 +490,6 @@ Run Time Type Information
 Microsoft's RTTI Implementation
 ================
 
-----
-
-\*nix Exceptions
-================
-
-* Vary a bit by implementation
-* Some older implementations relied on setjmp/longjmp
-* Newer libs typically take a table-based approach (similar to Microsoft's)
 
 ----
 
