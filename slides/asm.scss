@@ -27,7 +27,7 @@
 .flex-image img {
 	@include display(inline-flex);
 	@include justify-content(flex-end);
-	width:175%;
+	width:140%;
 	height: auto;
 }
 
@@ -38,6 +38,11 @@
 
 .shrink-image img {
 	width: 50%;
+	height: auto;
+}
+
+.tiny-image img {
+	width: 25%;
 	height: auto;
 }
 

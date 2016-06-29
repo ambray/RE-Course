@@ -50,7 +50,7 @@ PE Concepts
 
 ----
 
-:class: flex-image
+:class: mid-image
 
 
 .. image:: ./img/pe101.svg
@@ -103,6 +103,8 @@ Original Image Credit: Ero Carrera
 
 ----
 
+:class: windbg
+
 DOS Header
 ==========
 
@@ -143,10 +145,10 @@ The most interesting fields in this header:
 
 .. code:: c
 
-	typedef struct _IMAGE_DOS_HEADER {      // DOS .EXE header
-	    WORD   e_magic;                     // Magic Number
+	typedef struct _IMAGE_DOS_HEADER {  // DOS .EXE header
+	    WORD   e_magic;                 // Magic Number
 	    // ...
-	    LONG   e_lfanew;                    // The RVA to the PE header
+	    LONG   e_lfanew;               // The RVA to the PE header
 	  } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
 
 ----
@@ -169,11 +171,15 @@ pefile view
 	>>> import pefile
 	>>> pe = pefile.PE("demo.exe")
 	>>> pe.DOS_HEADER
-	<Structure: [IMAGE_DOS_HEADER] 0x0 0x0 e_magic: 0x5A4D 0x2 0x2 e_cblp: 0x90 0x4 0x4 
-	e_cp: 0x3 0x6 0x6 e_crlc: 0x0 0x8 0x8 e_cparhdr: 0x4 0xA 0xA e_minalloc: 0x0 0xC 0xC 
-	e_maxalloc: 0xFFFF 0xE 0xE e_ss: 0x0 0x10 0x10 e_sp: 0xB8 0x12 0x12 e_csum: 0x0 0x14 0x14 
-	e_ip: 0x0 0x16 0x16 e_cs: 0x0 0x18 0x18 e_lfarlc: 0x40 0x1A 0x1A e_ovno: 0x0 0x1C 0x1C 
-	e_res: 0x24 0x24 e_oemid: 0x0 0x26 0x26 e_oeminfo: 0x0 0x28 0x28 e_res2: 0x3C 0x3C 
+	<Structure: [IMAGE_DOS_HEADER] 0x0 0x0 e_magic: 0x5A4D 0x2 0x2 
+	e_cblp: 0x90 0x4 0x4 e_cp: 0x3 0x6 0x6 e_crlc: 0x0 0x8 0x8 
+	e_cparhdr: 0x4 0xA 0xA e_minalloc: 0x0 0xC 0xC 
+	e_maxalloc: 0xFFFF 0xE 0xE e_ss: 0x0 0x10 0x10 
+	e_sp: 0xB8 0x12 0x12 e_csum: 0x0 0x14 0x14 e_ip: 0x0 0x16 0x16 
+	e_cs: 0x0 0x18 0x18 e_lfarlc: 0x40 0x1A 0x1A 
+	e_ovno: 0x0 0x1C 0x1C e_res: 0x24 0x24 
+	e_oemid: 0x0 0x26 0x26 e_oeminfo: 0x0 0x28 0x28 
+	e_res2: 0x3C 0x3C 
 	e_lfanew: 0xE8>
 	>>> hex(pe.DOS_HEADER.e_lfanew)
 	'0xe8'
@@ -250,6 +256,8 @@ Defined: winnt.h
 
 ----
 
+:class: windbg
+
 Image File Header - Machine
 ===========================
 
@@ -258,36 +266,36 @@ Image File Header - Machine
 
 .. code:: c
 
-	#define IMAGE_FILE_MACHINE_UNKNOWN           0
-	#define IMAGE_FILE_MACHINE_I386              0x014c  // Intel 386.
-	#define IMAGE_FILE_MACHINE_R3000             0x0162  // MIPS little-endian, 0x160 big-endian
-	#define IMAGE_FILE_MACHINE_R4000             0x0166  // MIPS little-endian
-	#define IMAGE_FILE_MACHINE_R10000            0x0168  // MIPS little-endian
-	#define IMAGE_FILE_MACHINE_WCEMIPSV2         0x0169  // MIPS little-endian WCE v2
-	#define IMAGE_FILE_MACHINE_ALPHA             0x0184  // Alpha_AXP
-	#define IMAGE_FILE_MACHINE_SH3               0x01a2  // SH3 little-endian
-	#define IMAGE_FILE_MACHINE_SH3DSP            0x01a3
-	#define IMAGE_FILE_MACHINE_SH3E              0x01a4  // SH3E little-endian
-	#define IMAGE_FILE_MACHINE_SH4               0x01a6  // SH4 little-endian
-	#define IMAGE_FILE_MACHINE_SH5               0x01a8  // SH5
-	#define IMAGE_FILE_MACHINE_ARM               0x01c0  // ARM Little-Endian
-	#define IMAGE_FILE_MACHINE_THUMB             0x01c2  // ARM Thumb/Thumb-2 Little-Endian
-	#define IMAGE_FILE_MACHINE_ARMNT             0x01c4  // ARM Thumb-2 Little-Endian
-	#define IMAGE_FILE_MACHINE_AM33              0x01d3
-	#define IMAGE_FILE_MACHINE_POWERPC           0x01F0  // IBM PowerPC Little-Endian
-	#define IMAGE_FILE_MACHINE_POWERPCFP         0x01f1
-	#define IMAGE_FILE_MACHINE_IA64              0x0200  // Intel 64
-	#define IMAGE_FILE_MACHINE_MIPS16            0x0266  // MIPS
-	#define IMAGE_FILE_MACHINE_ALPHA64           0x0284  // ALPHA64
-	#define IMAGE_FILE_MACHINE_MIPSFPU           0x0366  // MIPS
-	#define IMAGE_FILE_MACHINE_MIPSFPU16         0x0466  // MIPS
-	#define IMAGE_FILE_MACHINE_AXP64             IMAGE_FILE_MACHINE_ALPHA64
-	#define IMAGE_FILE_MACHINE_TRICORE           0x0520  // Infineon
-	#define IMAGE_FILE_MACHINE_CEF               0x0CEF
-	#define IMAGE_FILE_MACHINE_EBC               0x0EBC  // EFI Byte Code
-	#define IMAGE_FILE_MACHINE_AMD64             0x8664  // AMD64 (K8)
-	#define IMAGE_FILE_MACHINE_M32R              0x9041  // M32R little-endian
-	#define IMAGE_FILE_MACHINE_CEE               0xC0EE
+	#define IMAGE_FILE_MACHINE_UNKNOWN    0
+	#define IMAGE_FILE_MACHINE_I386       0x014c  // Intel 386.
+	#define IMAGE_FILE_MACHINE_R3000      0x0162  // MIPS le 0x160 big-endian
+	#define IMAGE_FILE_MACHINE_R4000      0x0166  // MIPS little-endian
+	#define IMAGE_FILE_MACHINE_R10000     0x0168  // MIPS little-endian
+	#define IMAGE_FILE_MACHINE_WCEMIPSV2  0x0169  // MIPS little-endian WCE v2
+	#define IMAGE_FILE_MACHINE_ALPHA      0x0184  // Alpha_AXP
+	#define IMAGE_FILE_MACHINE_SH3        0x01a2  // SH3 little-endian
+	#define IMAGE_FILE_MACHINE_SH3DSP     0x01a3
+	#define IMAGE_FILE_MACHINE_SH3E       0x01a4  // SH3E little-endian
+	#define IMAGE_FILE_MACHINE_SH4        0x01a6  // SH4 little-endian
+	#define IMAGE_FILE_MACHINE_SH5        0x01a8  // SH5
+	#define IMAGE_FILE_MACHINE_ARM        0x01c0  // ARM Little-Endian
+	#define IMAGE_FILE_MACHINE_THUMB      0x01c2  // ARM Thumb/Thumb-2 LE
+	#define IMAGE_FILE_MACHINE_ARMNT      0x01c4  // ARM Thumb-2 Little-Endian
+	#define IMAGE_FILE_MACHINE_AM33       0x01d3
+	#define IMAGE_FILE_MACHINE_POWERPC    0x01F0  // IBM PowerPC Little-Endian
+	#define IMAGE_FILE_MACHINE_POWERPCFP  0x01f1
+	#define IMAGE_FILE_MACHINE_IA64       0x0200  // Intel 64
+	#define IMAGE_FILE_MACHINE_MIPS16     0x0266  // MIPS
+	#define IMAGE_FILE_MACHINE_ALPHA64    0x0284  // ALPHA64
+	#define IMAGE_FILE_MACHINE_MIPSFPU    0x0366  // MIPS
+	#define IMAGE_FILE_MACHINE_MIPSFPU16  0x0466  // MIPS
+	#define IMAGE_FILE_MACHINE_AXP64      IMAGE_FILE_MACHINE_ALPHA64
+	#define IMAGE_FILE_MACHINE_TRICORE    0x0520  // Infineon
+	#define IMAGE_FILE_MACHINE_CEF        0x0CEF
+	#define IMAGE_FILE_MACHINE_EBC        0x0EBC  // EFI Byte Code
+	#define IMAGE_FILE_MACHINE_AMD64      0x8664  // AMD64 (K8)
+	#define IMAGE_FILE_MACHINE_M32R       0x9041  // M32R little-endian
+	#define IMAGE_FILE_MACHINE_CEE        0xC0EE
 
 ----
 
@@ -314,6 +322,8 @@ Image File Header - PointerToSymbolTable / NumberOfSymbols
 
 ----
 
+
+
 Image File Header - Characteristics
 ===================================
 
@@ -321,25 +331,47 @@ Image File Header - Characteristics
 * Information about relocations, whether or not it is executable or a DLL, etc is set here
 * A number of other potential attributes is specified in winnt.h (typos from header file included below :P ):
 
+----
+
+:class: windbg
+
+Image File Header Characteristics (Cont'd)
+==========================================
+
 .. code:: c
 
-	#define IMAGE_FILE_RELOCS_STRIPPED           0x0001  // Relocation info stripped from file.
-	#define IMAGE_FILE_EXECUTABLE_IMAGE          0x0002  // File is executable  (i.e. no unresolved external references).
-	#define IMAGE_FILE_LINE_NUMS_STRIPPED        0x0004  // Line nunbers stripped from file.
-	#define IMAGE_FILE_LOCAL_SYMS_STRIPPED       0x0008  // Local symbols stripped from file.
-	#define IMAGE_FILE_AGGRESIVE_WS_TRIM         0x0010  // Aggressively trim working set
-	#define IMAGE_FILE_LARGE_ADDRESS_AWARE       0x0020  // App can handle >2gb addresses
-	#define IMAGE_FILE_BYTES_REVERSED_LO         0x0080  // Bytes of machine word are reversed.
-	#define IMAGE_FILE_32BIT_MACHINE             0x0100  // 32 bit word machine.
-	#define IMAGE_FILE_DEBUG_STRIPPED            0x0200  // Debugging info stripped from file in .DBG file
-	#define IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP   0x0400  // If Image is on removable media, copy and run from the swap file.
-	#define IMAGE_FILE_NET_RUN_FROM_SWAP         0x0800  // If Image is on Net, copy and run from the swap file.
-	#define IMAGE_FILE_SYSTEM                    0x1000  // System File.
+	// Relocation info stripped from file.
+	#define IMAGE_FILE_RELOCS_STRIPPED           0x0001  
+	// File is executable  (i.e. no unresolved  external references).
+	#define IMAGE_FILE_EXECUTABLE_IMAGE          0x0002 
+	// Line nunbers stripped from file.
+	#define IMAGE_FILE_LINE_NUMS_STRIPPED        0x0004 
+	// Local symbols stripped from file. 
+	#define IMAGE_FILE_LOCAL_SYMS_STRIPPED       0x0008
+	// Aggressively trim working set 
+	#define IMAGE_FILE_AGGRESIVE_WS_TRIM         0x0010 
+	// App can handle >2gb addresses 
+	#define IMAGE_FILE_LARGE_ADDRESS_AWARE       0x0020 
+	// Bytes of machine word are reversed. 
+	#define IMAGE_FILE_BYTES_REVERSED_LO         0x0080  
+	// 32 bit word machine.
+	#define IMAGE_FILE_32BIT_MACHINE             0x0100  
+	// Debugging info stripped from file in .DBG  file
+	#define IMAGE_FILE_DEBUG_STRIPPED            0x0200 
+	// If Image is on removable media, copy and run from the swap file.
+	#define IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP   0x0400 
+	// If Image is on Net, copy and run from the swap file. 
+	#define IMAGE_FILE_NET_RUN_FROM_SWAP         0x0800 
+	#define IMAGE_FILE_SYSTEM                    0x1000  // System File. 
 	#define IMAGE_FILE_DLL                       0x2000  // File is a DLL.
-	#define IMAGE_FILE_UP_SYSTEM_ONLY            0x4000  // File should only be run on a UP machine
-	#define IMAGE_FILE_BYTES_REVERSED_HI         0x8000  // Bytes of machine word are reversed.
+	// File should only be run on a UP machine
+	#define IMAGE_FILE_UP_SYSTEM_ONLY            0x4000  
+	// Bytes of machine word are reversed.
+	#define IMAGE_FILE_BYTES_REVERSED_HI         0x8000  
 
 ----
+
+:class: windbg
 
 File Header pefile View
 =======================
@@ -347,7 +379,8 @@ File Header pefile View
 .. code:: python
 
 	>>> pe.FILE_HEADER
-	<Structure: [IMAGE_FILE_HEADER] 0xEC 0x0 Machine: 0x14C 0xEE 0x2 NumberOfSections: 0x3 0xF0 0x4 
+	<Structure: [IMAGE_FILE_HEADER] 0xEC 0x0 Machine: 0x14C 0xEE 0x2 
+	NumberOfSections: 0x3 0xF0 0x4 
 	TimeDateStamp: 0x5717DB9D [Wed Apr 20 19:42:21 2016 UTC] 0xF4 0x8 
 	PointerToSymbolTable: 0x0 0xF8 0xC NumberOfSymbols: 0x0 0xFC 0x10 
 	SizeOfOptionalHeader: 0xE0 0xFE 0x12 Characteristics: 0x102>
@@ -373,6 +406,8 @@ Some convenient attribute functions:
 Original Image Credit: Ero Carrera
 
 ----
+
+:class: windbg
 
 Image Optional Header
 =====================
@@ -445,8 +480,20 @@ Some Interesting Fields
 	#define IMAGE_NT_OPTIONAL_HDR64_MAGIC      0x20b
 	#define IMAGE_ROM_OPTIONAL_HDR_MAGIC       0x107
 
+
+----
+
+Some Interesting Fields (cont'd)
+================================
+
 * SizeOfCode: The combined, rounded-up size of all the code sections. Generally, this matches the size of the .text section.
 * AddressOfEntryPoint: This is an RVA indicating where execution should begin once the executable has been loaded. Typically someplace int he .text section.
+
+----
+
+Some Interesting Fields (cont'd)
+================================
+
 * BaseOfCode: An RVA to the beginning of the code section, relative to the image base.
 * ImageBase: The "preferred address" of the image when it gets loaded into memory. 
 	+ According to MSDN, this must be a multiple of 64K. 
@@ -457,6 +504,8 @@ Some Interesting Fields
 
 ----
 
+:class: windbg
+
 Some Interesting Fields (cont'd)
 ================================
 
@@ -465,20 +514,36 @@ Some Interesting Fields (cont'd)
 
 .. code:: c
 
-	#define IMAGE_SUBSYSTEM_NATIVE               1   // Image doesn't require a subsystem (e.g., drivers).
-	#define IMAGE_SUBSYSTEM_WINDOWS_GUI          2   // Image runs in the Windows GUI subsystem.
-	#define IMAGE_SUBSYSTEM_WINDOWS_CUI          3   // Image runs in the Windows character subsystem. (console applications)
+	// Image doesn't require a subsystem (e.g., drivers).
+	#define IMAGE_SUBSYSTEM_NATIVE       1  
+	// Image runs in the Windows GUI subsystem. 
+	#define IMAGE_SUBSYSTEM_WINDOWS_GUI  2   
+	// Image runs in the Windows character subsystem. (console applications)
+	#define IMAGE_SUBSYSTEM_WINDOWS_CUI  3   
+
+----
+
+:class: windbg
+
+Some Interesting Fields (cont'd)
+================================
 
 * DllCharacteristics: Some special flags indicating certain attributes of the file. Possible options are documented in the same places as many of the other fields (MSDN, winnt.h) but some interesting options include:
 
 .. code:: c
 
-	#define IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE 0x0040     // DLL can move.
-	#define IMAGE_DLLCHARACTERISTICS_NX_COMPAT    0x0100     // Image is NX compatible
-	#define IMAGE_DLLCHARACTERISTICS_NO_SEH       0x0400     // Image does not use SEH.  No SE handler may reside in this image
-	#define IMAGE_DLLCHARACTERISTICS_WDM_DRIVER   0x2000     // Driver uses WDM model
-	#define IMAGE_DLLCHARACTERISTICS_GUARD_CF     0x4000     // Image supports Control Flow Guard.
+	#define IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE 0x0040 // DLL can move.
+	#define IMAGE_DLLCHARACTERISTICS_NX_COMPAT    0x0100 // Image is NX compatible
+	// Image does not use SEH.  No SE handler may reside in this image    
+	#define IMAGE_DLLCHARACTERISTICS_NO_SEH       0x0400     
+	#define IMAGE_DLLCHARACTERISTICS_WDM_DRIVER   0x2000 // Driver uses WDM model
+	// Image supports Control Flow Guard.
+	#define IMAGE_DLLCHARACTERISTICS_GUARD_CF     0x4000 
 
+----
+
+Some Interesting Fields (cont'd)
+================================
 
 * NumberOfRvaAndSizes: This (theoretically) could change, but generally ends up being 16. It is intended to indicate the number of entries in the IMAGE_DATA_DIRECTORY array.
 
@@ -489,6 +554,8 @@ Some Interesting Fields (cont'd)
 	Some related mentions: DYNAMIC_BASE refers specifically to ASLR, NX_COMPAT essentially relates to DEP (or data execution prevention), SEH/handlers relate to exception handling, and control flow guard is a feature that is intended to prevent certain types of hooks.
 
 ----
+
+:class: windbg
 
 Image Directory Entries
 =======================
@@ -503,22 +570,22 @@ Image Directory Entries
 	// ...
 
 
-	#define IMAGE_DIRECTORY_ENTRY_EXPORT          0   // Export Directory
-	#define IMAGE_DIRECTORY_ENTRY_IMPORT          1   // Import Directory
-	#define IMAGE_DIRECTORY_ENTRY_RESOURCE        2   // Resource Directory
-	#define IMAGE_DIRECTORY_ENTRY_EXCEPTION       3   // Exception Directory
-	#define IMAGE_DIRECTORY_ENTRY_SECURITY        4   // Security Directory
-	#define IMAGE_DIRECTORY_ENTRY_BASERELOC       5   // Base Relocation Table
-	#define IMAGE_DIRECTORY_ENTRY_DEBUG           6   // Debug Directory
-	//      IMAGE_DIRECTORY_ENTRY_COPYRIGHT       7   // (X86 usage)
-	#define IMAGE_DIRECTORY_ENTRY_ARCHITECTURE    7   // Architecture Specific Data
-	#define IMAGE_DIRECTORY_ENTRY_GLOBALPTR       8   // RVA of GP
-	#define IMAGE_DIRECTORY_ENTRY_TLS             9   // TLS Directory
-	#define IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG    10   // Load Configuration Directory
-	#define IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT   11   // Bound Import Directory in headers
-	#define IMAGE_DIRECTORY_ENTRY_IAT            12   // Import Address Table
-	#define IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT   13   // Delay Load Import Descriptors
-	#define IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14   // COM Runtime descriptor
+	#define IMAGE_DIRECTORY_ENTRY_EXPORT          0 // Export Directory
+	#define IMAGE_DIRECTORY_ENTRY_IMPORT          1 // Import Directory
+	#define IMAGE_DIRECTORY_ENTRY_RESOURCE        2 // Resource Directory
+	#define IMAGE_DIRECTORY_ENTRY_EXCEPTION       3 // Exception Directory
+	#define IMAGE_DIRECTORY_ENTRY_SECURITY        4 // Security Directory
+	#define IMAGE_DIRECTORY_ENTRY_BASERELOC       5 // Base Relocation Table
+	#define IMAGE_DIRECTORY_ENTRY_DEBUG           6 // Debug Directory
+	//      IMAGE_DIRECTORY_ENTRY_COPYRIGHT       7 // (X86 usage)
+	#define IMAGE_DIRECTORY_ENTRY_ARCHITECTURE    7 // Architecture Specific Data
+	#define IMAGE_DIRECTORY_ENTRY_GLOBALPTR       8 // RVA of GP
+	#define IMAGE_DIRECTORY_ENTRY_TLS             9 // TLS Directory
+	#define IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG    10 // Load Configuration Dir
+	#define IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT   11 // Bound Import Dir in headers
+	#define IMAGE_DIRECTORY_ENTRY_IAT            12 // Import Address Table
+	#define IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT   13 // Delay Load Import Descr
+	#define IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR 14 // COM Runtime descriptor
 
 Defined in winnt.h
 
@@ -531,6 +598,8 @@ Image Directory Entries (cont'd)
 * We will talk about many of these sections individually, and what they typically contain when we return to this topic
 
 ----
+
+:class: windbg
 
 Image Optional Header pefile View
 =================================
@@ -554,7 +623,8 @@ As seen below, the Image Directory Entries are actually excluded from the output
 	CheckSum: 0x9A31 0x144 0x44 Subsystem: 0x3 0x146 0x46 
 	DllCharacteristics: 0x8140 0x148 0x48 SizeOfStackReserve: 0x40000 0x14C 0x4C 
 	SizeOfStackCommit: 0x2000 0x150 0x50 SizeOfHeapReserve: 0x100000 0x154 0x54 
-	SizeOfHeapCommit: 0x1000 0x158 0x58 LoaderFlags: 0x0 0x15C 0x5C NumberOfRvaAndSizes: 0x10>
+	SizeOfHeapCommit: 0x1000 0x158 0x58 LoaderFlags: 0x0 0x15C 0x5C 
+	NumberOfRvaAndSizes: 0x10>
 
 ----
 
@@ -598,12 +668,21 @@ Section Header
 * Misc: This union means different things to .obj files and regular executables (though, as they are in a union, they both contain the same data):
 	+ In a standard executable, it contains the actual size of the code or data contained in the section, rounded up for alignment.
 	+ In a .obj file, it contains the actual location of the data in the file (as the SizeOfRawData attribute, later in the structure, indicates the actual data size)
+
+
+----
+
+Section Header (cont'd)
+=======================
+
 * VirtualAddress: RVA relative to the ImageBase element of OptionalHeader
 * SizeOfRawData: This is used in a similar fashion to Misc.VirtualSize for executables, but is the definitive size to use for .obj files. 
 	+ Sometimes the VirtualSize may be larger, in the event that the section will need more space allocated
 * PointerToRawData: The offset into the file where the section data is located
 
 ----
+
+:class: windbg
 
 Section Header Characteristics
 ==============================
@@ -613,21 +692,32 @@ Section Header Characteristics
 
 .. code:: c
 
-	#define IMAGE_SCN_CNT_CODE                   0x00000020  // Section contains code.
-	#define IMAGE_SCN_CNT_INITIALIZED_DATA       0x00000040  // Section contains initialized data.
-	#define IMAGE_SCN_CNT_UNINITIALIZED_DATA     0x00000080  // Section contains uninitialized data.
-	#define IMAGE_SCN_MEM_NOT_CACHED             0x04000000  // Section is not cachable.
-	#define IMAGE_SCN_MEM_NOT_PAGED              0x08000000  // Section is not pageable.
-	#define IMAGE_SCN_MEM_SHARED                 0x10000000  // Section is shareable.
-	#define IMAGE_SCN_MEM_EXECUTE                0x20000000  // Section is executable.
-	#define IMAGE_SCN_MEM_READ                   0x40000000  // Section is readable.
-	#define IMAGE_SCN_MEM_WRITE                  0x80000000  // Section is writeable.
+	// Section contains code.
+	#define IMAGE_SCN_CNT_CODE                   0x00000020
+	// Section contains initialized data.  
+	#define IMAGE_SCN_CNT_INITIALIZED_DATA       0x00000040  
+	// Section contains uninitialized data.
+	#define IMAGE_SCN_CNT_UNINITIALIZED_DATA     0x00000080
+	// Section is not cachable.  
+	#define IMAGE_SCN_MEM_NOT_CACHED             0x04000000  
+	// Section is not pageable.
+	#define IMAGE_SCN_MEM_NOT_PAGED              0x08000000
+	// Section is shareable.  
+	#define IMAGE_SCN_MEM_SHARED                 0x10000000 
+	// Section is executable. 
+	#define IMAGE_SCN_MEM_EXECUTE                0x20000000
+	// Section is readable.  
+	#define IMAGE_SCN_MEM_READ                   0x40000000
+	// Section is writeable.  
+	#define IMAGE_SCN_MEM_WRITE                  0x80000000  
 
 .. note::
 
 	Some of these flags will potentionally get ignored, depending on the context of use (e.g., flagging a user mode executable as being "non-pageable")
 
 ----
+
+:class: windbg
 
 Viewing Sections via pefile
 ===========================
@@ -642,8 +732,8 @@ The following will walk the sections and print some information about each:
 
 	pe = pefile.PE("demo.exe")
 	for sec in pe.sections:
-		print("{}: Virtual Address: {}, Size of raw data: {}".format(sec.Name,\
-		 	  hex(sec.Misc_VirtualSize), hex(sec.SizeOfRawData)))
+	  print("{}: Virtual Address: {}, Size of raw data: {}".format(sec.Name,\
+	    hex(sec.Misc_VirtualSize), hex(sec.SizeOfRawData)))
 
 
 Addtionally, portions of the sections can be viewed individually:
@@ -667,6 +757,8 @@ We can also retrieve a portion of a section in this fashion (the first 25 bytes,
 	Demo view of section types via IDA Pro
 
 ----
+
+:class: windbg
 
 Some Common Section Types
 =========================
@@ -698,6 +790,8 @@ Some Common Section Types
 	Characteristics: 0x40000040>
 
 ----
+
+:class: windbg
 
 Some Common Section Types (cont'd)
 ==================================
@@ -738,6 +832,8 @@ Original Image Credit: Ero Carrera
 
 ----
 
+:class: windbg
+
 Image Imports
 =============
 
@@ -751,18 +847,19 @@ Image Imports
 	/* ... */
 
 	typedef struct _IMAGE_IMPORT_DESCRIPTOR {
-	    union {
-	        DWORD   Characteristics;            // 0 for terminating null import descriptor
-	        DWORD   OriginalFirstThunk;         // RVA to original unbound IAT (PIMAGE_THUNK_DATA)
-	    } u;
-	    DWORD   TimeDateStamp;                  // 0 if not bound,
-	                                            // -1 if bound, and real date\time stamp
-	                                            //     in IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT (new BIND)
-	                                            // O.W. date/time stamp of DLL bound to (Old BIND)
+	  union {
+	    DWORD   Characteristics;    // 0 for terminating null import descriptor
+	     // RVA to original unbound IAT (PIMAGE_THUNK_DATA)
+	    DWORD   OriginalFirstThunk;
+	  } u;
+	  DWORD   TimeDateStamp;  // 0 if not bound,
+	                          // -1 if bound, and real date\time stamp
+	                          // in IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT (new BIND)
+	                          // O.W. date/time stamp of DLL bound to (Old BIND)
 
-	    DWORD   ForwarderChain;                 // -1 if no forwarders
-	    DWORD   Name;
-	    DWORD   FirstThunk;                     // RVA to IAT (if bound this IAT has actual addresses)
+	  DWORD   ForwarderChain; // -1 if no forwarders
+	  DWORD   Name;
+	  DWORD   FirstThunk;  // RVA to IAT (if bound this IAT has actual addresses)
 	} IMAGE_IMPORT_DESCRIPTOR;
 
 Defined: winnt.h
@@ -774,6 +871,12 @@ Image Import Descriptor
 
 * OriginalFirstThunk: This element contains an RVA to the Import Name Table (INT), which is a list of IMAGE_THUNK_DATA unions (we'll discuss this structure more next slide)
 * ForwardedChain: If not set to -1 (or in this case: 0xffffffff), it contains an index into the FirstThunk array (more on this field later), which allows a DLL to forward calls to an exported function to a function exported by another DLL.
+
+----
+
+Image Import Descriptor (cont'd)
+================================
+
 * Name: An RVA to a NULL-terminated ASCII string containing the module name
 * FirstThunk: Another RVA to an array of IMAGE_THUNK_DATA unions. This list, however, is the actual Import Address Table (IAT), rather than the INT pointed to by the OriginalFirstThunk.
 	+ This list (the IAT) actually gets overwritten by the loader with the actual (virtual) addresses we're trying to reach
@@ -831,7 +934,7 @@ Initial
 =======
 
 
-:class: flex-image
+:class: tiny-image
 
 .. image:: ./img/PE_import_view_initial_p2.png
 
@@ -841,7 +944,7 @@ Post-Load
 =========
 
 
-:class: flex-image
+:class: tiny-image
 
 .. image:: ./img/PE_import_view_after.png
 
