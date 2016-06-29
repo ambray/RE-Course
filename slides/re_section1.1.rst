@@ -462,6 +462,8 @@ Result
 
 ----
 
+:class: mid-image
+
 And Finally...
 ==============
 

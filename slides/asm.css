@@ -41,6 +41,10 @@
   width: 175%;
   height: auto; }
 
+.mid-image img {
+  width: 75%;
+  height: auto; }
+
 .shrink-image img {
   width: 50%;
   height: auto; }
