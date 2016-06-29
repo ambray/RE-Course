@@ -934,7 +934,7 @@ Initial
 =======
 
 
-:class: tiny-image
+:class: mid-image
 
 .. image:: ./img/PE_import_view_initial_p2.png
 
@@ -944,12 +944,14 @@ Post-Load
 =========
 
 
-:class: tiny-image
+:class: mid-image
 
 .. image:: ./img/PE_import_view_after.png
 
 
 ----
+
+:class: windbg
 
 Listing Imports
 ===============
@@ -958,17 +960,27 @@ Listing Imports
 
 .. code:: python
 
-	>>> imps = { entry.dll : [ imp.name for imp in entry.imports ] for entry in pe.DIRECTORY_ENTRY_IMPORT }
+	>>> imps = { entry.dll :\
+	 [ imp.name for imp in entry.imports ]\
+	  for entry in pe.DIRECTORY_ENTRY_IMPORT }
 	>>> imps
-	{'KERNEL32.dll': ['GetLastError', 'UnhandledExceptionFilter', 'GetCurrentProcess', 'TerminateProcess',
-	 'GetSystemTimeAsFileTime', 'GetCurrentProcessId', 'GetCurrentThreadId', 'GetTickCount', 
-	 'QueryPerformanceCounter', 'GetModuleHandleA', 'SetUnhandledExceptionFilter', 'RtlUnwind', 
-	 'InterlockedCompareExchange', 'Sleep', 'InterlockedExchange'], 'msvcrt.dll': ['_exit', '_XcptFilter', 
-	 'exit', '_initterm', '_amsg_exit', '__setusermatherr', '_adjust_fdiv', '__p__commode', '__p__fmode', 
-	 '__set_app_type', '?terminate@@YAXXZ', '_controlfp', '_cexit', '__getmainargs', 'fopen', 'printf', 'fprintf', 
+	{'KERNEL32.dll': ['GetLastError', 'UnhandledExceptionFilter',
+	 'GetCurrentProcess', 'TerminateProcess',
+	 'GetSystemTimeAsFileTime', 'GetCurrentProcessId', 
+	 'GetCurrentThreadId', 'GetTickCount', 
+	 'QueryPerformanceCounter', 'GetModuleHandleA', 
+	 'SetUnhandledExceptionFilter', 'RtlUnwind', 
+	 'InterlockedCompareExchange', 'Sleep', 'InterlockedExchange'], 
+	 'msvcrt.dll': ['_exit', '_XcptFilter', 
+	 'exit', '_initterm', '_amsg_exit', '__setusermatherr', 
+	 '_adjust_fdiv', '__p__commode', '__p__fmode', 
+	 '__set_app_type', '?terminate@@YAXXZ', '_controlfp', '_cexit', 
+	 '__getmainargs', 'fopen', 'printf', 'fprintf', 
 	 'fclose'], 'USER32.dll': ['MessageBoxA']}
 
 ----
+
+:class: flex-image
 
 Listing Imports (cont'd)
 ========================
@@ -1043,6 +1055,8 @@ Correlating Names to Ordinals
 
 ----
 
+:class: windbg
+
 Viewing Exports
 ===============
 
@@ -1052,20 +1066,32 @@ Viewing Exports
 
 	>>> import pefile
 	>>> pe = pefile.PE("sqlite3.dll")
-	>>> exports = [(exp.name, exp.ordinal) for exp in pe.DIRECTORY_ENTRY_EXPORT.symbols]
+	>>> exports = [(exp.name, exp.ordinal)\
+	 for exp in pe.DIRECTORY_ENTRY_EXPORT.symbols]
 	>>> exports
-	[('sqlite3_aggregate_context', 1), ('sqlite3_aggregate_count', 2), ('sqlite3_auto_extension', 3), 
-	('sqlite3_backup_finish', 4), ('sqlite3_backup_init', 5), ('sqlite3_backup_pagecount', 6), 
-	('sqlite3_backup_remaining', 7), ('sqlite3_backup_step', 8), ('sqlite3_bind_blob', 9), ('sqlite3_bind_double', 10),
-	('sqlite3_bind_int', 11), ('sqlite3_bind_int64', 12), ('sqlite3_bind_null', 13), ('sqlite3_bind_parameter_count', 14),
-	('sqlite3_bind_parameter_index', 15), ('sqlite3_bind_parameter_name', 16), ('sqlite3_bind_text', 17),
-	('sqlite3_bind_text16', 18), ('sqlite3_bind_value', 19), ('sqlite3_bind_zeroblob', 20), ('sqlite3_blob_bytes', 21), 
-	('sqlite3_blob_close', 22), ('sqlite3_blob_open', 23), ('sqlite3_blob_read', 24), ('sqlite3_blob_write', 25), 
-	('sqlite3_busy_handler', 26), ('sqlite3_busy_timeout', 27), ('sqlite3_changes', 28), ('sqlite3_clear_bindings', 29), 
-	('sqlite3_close', 30), ('sqlite3_collation_needed', 31), ('sqlite3_collation_needed16', 32)
+	[('sqlite3_aggregate_context', 1), ('sqlite3_aggregate_count', 2), 
+	('sqlite3_auto_extension', 3), 
+	('sqlite3_backup_finish', 4), ('sqlite3_backup_init', 5), 
+	('sqlite3_backup_pagecount', 6), 
+	('sqlite3_backup_remaining', 7), ('sqlite3_backup_step', 8), 
+	('sqlite3_bind_blob', 9), ('sqlite3_bind_double', 10),
+	('sqlite3_bind_int', 11), ('sqlite3_bind_int64', 12), 
+	('sqlite3_bind_null', 13), ('sqlite3_bind_parameter_count', 14),
+	('sqlite3_bind_parameter_index', 15), ('sqlite3_bind_parameter_name', 16), 
+	('sqlite3_bind_text', 17), ('sqlite3_bind_text16', 18), 
+	('sqlite3_bind_value', 19), ('sqlite3_bind_zeroblob', 20), 
+	('sqlite3_blob_bytes', 21), 
+	('sqlite3_blob_close', 22), ('sqlite3_blob_open', 23), 
+	('sqlite3_blob_read', 24), ('sqlite3_blob_write', 25), 
+	('sqlite3_busy_handler', 26), ('sqlite3_busy_timeout', 27), 
+	('sqlite3_changes', 28), ('sqlite3_clear_bindings', 29), 
+	('sqlite3_close', 30), ('sqlite3_collation_needed', 31), 
+	('sqlite3_collation_needed16', 32)
 	...
 
 ----
+
+:class: flex-image
 
 Viewing Exports (cont'd)
 ========================
