@@ -240,10 +240,16 @@ What is Dynamic Linking?
 * Allows binary data to be distributed as a DLL or Shared Object file
 	+ Has the same general attributes as a standard executable  (including the same file format)
 	+ Provides common library services for multiple executables without having to increase size as much as static linking
-* Typically requires a static library and a header file
 * Loaded into process space at runtime, as part of dependency resolution
 	+ When target executable is run, its imports are examined by the operating system
 	+ Dynamic libraries it depends on are loaded prior to execution
+
+----
+
+Dynamic Linking (cont'd)
+========================
+
+* Typically requires a static library and a header file
 * Most (read: nearly all) applications implicitly do this in one way or another
 	+ C(++) Runtime code is often dynamically linked (e.g., glibc)
 	+ Ancillary, OS-provided code (e.g., kernel32) works in this fashion also
@@ -291,30 +297,32 @@ Windows - Loading a Library
 
 	int main(int argc, char** argv)
 	{
-		// Our module
-		HMODULE hm = NULL;
-		// Our dynamic function pointer
-		int (__stdcall *dynamicFunction)(int) = NULL;
-		int result = 0;
+	  // Our module
+	  HMODULE hm = NULL;
+	  // Our dynamic function pointer
+	  int (__stdcall *dynamicFunction)(int) = NULL;
+	  int result = 0;
 
-		// try to dynamically load our library, fail and return if we can't find it!
-		if(NULL == (hm = LoadLibraryA("MyLib.dll"))) {
-			printf("We failed to load our library! %d\n", GetLastError());
-			return -1;
-		}
-		// Try to find our dynamic function... this requires us to do a crazy cast.
-		// If it were exported by ordinal, the string "MyFunction@4" would change to: (char*)n,
-		// where n is the ordinal number. This is a bit strange (to say the least), but the way the
-		// API works.
-		if(NULL == (dynamicFunction = (int(__stdcall*)(int))GetProcAddress(hm, "MyFunction@4"))) {
-			printf("Failed to find MyFunction! %d\n", GetLastError());
-			return -2;
-		}
-		// Now we call our function, and FreeLibrary (since we are done with it now)
-		result = dynamicFunction(10);
-		FreeLibrary(hm);
+	  // try to load a dll,return if we can't find it!
+	  if(NULL == (hm = LoadLibraryA("MyLib.dll"))) {
+	    printf("Failed to load library! %d\n",GetLastError());
+		return -1;
+	  }
+	  // Try to find an exported function.If it were exported by 
+	  // ordinal, the 2nd param would change to: (char*)n, where 
+	  // n is the ordinal number. This is a bit strange,but is  
+	  // the way the API works.
+	  dynamicFunction = (int(__stdcall*)(int))GetProcAddress(hm, 
+	                                             "MyFunction@4");
+	  if(NULL == dynamicFunction) {
+		printf("Failed to find func! %d\n", GetLastError());
+		return -2;
+	  }
+	  result = dynamicFunction(10);
+	  // Now we FreeLibrary (since we are done with it now)
+	  FreeLibrary(hm);
 
-		return result;
+	  return result;
 	}
 
 ----
@@ -326,24 +334,25 @@ Linux - Loading a Library
 
 	int main(int argc, char** argv)
 	{
-		void* hm = NULL;
-		int(*myexport)(int) = NULL;
-		int result = 0;
-		// As with loadlibrary, we pass the path to load
-		if(NULL == (hm = dlopen("./mylib.so", RTLD_NOW))) {
-			printf("Failed to find our lib! %s\n", strerror(errno));
-			return errno;
-		}
-		// again, we get our function pointer
-		if(NULL == (myexport = (int(*)(int)))dlsym(hm, "myExportedFunction")) {
-			printf("Failed to find our function! %s\n", strerror(errno));
-			return errno;
-		}
-		// call and close!
-		result = myexport(10);
-		dlclose(hm);
+	  void* hm = NULL;
+	  int(*myexport)(int) = NULL;
+	  int result = 0;
+	  // As with loadlibrary, we pass the path to load
+	  if(NULL == (hm = dlopen("./mylib.so", RTLD_NOW))) {
+	    printf("Failed to find our lib! %s\n", strerror(errno));
+	    return errno;
+	  }
+	  // again, we get our function pointer
+	  myexport = (int(*)(int)))dlsym(hm, "myExportedFunction");
+	  if(NULL == myexport) {
+	    printf("Failed to find our func! %s\n", strerror(errno));
+	    return errno;
+	  }
+	  // call and close!
+	  result = myexport(10);
+	  dlclose(hm);
 
-		return result;
+	  return result;
 	}
 
 ----
