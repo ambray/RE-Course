@@ -488,7 +488,7 @@ Run Time Type Information
 ----
 
 Microsoft's RTTI Implementation
-================
+===============================
 
 
 ----
