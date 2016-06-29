@@ -62,7 +62,7 @@ Functions Window
 ================
 
 * IDA will load blocks of code that resemble functions here
-* Many of them will initially be named "sub_\*"
+* Many of them will initially be named "sub\_\*"
 	+ Can be renamed later, as functionality is uncovered
 	+ A subset may have specific names on load, from symbols, functionality, etc
 
