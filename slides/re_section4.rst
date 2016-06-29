@@ -128,7 +128,7 @@ Jump Tables - Example C
 
 ----
 
-:class: flex-image-2
+:class: flex-image
 
 Jump Tables - Example ASM
 =========================
@@ -138,7 +138,7 @@ Jump Tables - Example ASM
 ----
 
 :data-x: r2500
-:class: flex-image-2
+:class: flex-image
 
 Jump Tables - Example ASM (Cont'd)
 ==================================
@@ -164,7 +164,7 @@ Function Inlining - Example C
 
 	BOOL __forceinline func1(int x)
 	{
-		return x % 10 ? FALSE : TRUE;
+	  return x % 10 ? FALSE : TRUE;
 	}
 
 	// ... 
@@ -172,17 +172,16 @@ Function Inlining - Example C
 	int main(int argc, char** argv)
 	{
 
-		const char* tmp = func1(atoi(argv[1])) 
-								? "Yes" : "No";
-		printf("Is the cmdline param a multiple of 10? %s\n",
-			tmp);
+	  const char* tmp = func1(atoi(argv[1])) ? "Yes" : "No";
+	  printf("Is the cmdline param a multiple of 10? %s\n",
+	    tmp);
 
-		return 0;
+	  return 0;
 	}
 
 ----
 
-:class: shrink-image
+:class: mid-image
 
 Function Inlining - Example ASM
 ===============================
