@@ -28,8 +28,7 @@ void deoffuscate(char* buffer, int size) {
     }
 }
 
-int __cdecl main(int argc, char* argv[]) {
-
+void __declspec(dllexport) Lab3() {
     HANDLE hFile = openFile("C:\\badlove.dat");
     DWORD bytesRead = 0;
     DWORD err = 0;
@@ -56,6 +55,10 @@ int __cdecl main(int argc, char* argv[]) {
     else {
         printf("What is? %s\n", buffer);
     }
-    
+}
+
+int __cdecl main(int argc, char* argv[]) {
+
+    Lab3();
     return 0;
 }

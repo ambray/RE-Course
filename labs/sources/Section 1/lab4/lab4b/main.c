@@ -19,7 +19,7 @@ int browsers()
     return 0;
 }
 
-int name() {
+int __declspec(dllexport) Lab4b() {
 	char * line = (char *) HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 100), * linep = line;
     size_t lenmax = 100, len = lenmax;
     char* linen = NULL;
@@ -53,12 +53,11 @@ int name() {
 	
 	fprintf(stdout, "%s is not my name.", linep);
 	
-    return 0;
+    return browsers();
 }
 
 int __cdecl main(int argc, char** argv)
 {
-	browsers();
 
-	return name();
+	return Lab4b();
 }

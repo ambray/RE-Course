@@ -4,7 +4,7 @@
 
 
 
-int __cdecl main(int argc, char* argv[], char* envp[]) 
+int __declspec(dllexport) __cdecl Lab2(int argc, char* argv[])
 {
     char buf[MAX_PATH + 1] = {0};
     DWORD value = 0;
@@ -21,6 +21,11 @@ int __cdecl main(int argc, char* argv[], char* envp[])
         return -3;
 
     MessageBoxA(NULL, "[*] Success!", "Success", MB_OK);
-    
     return 0;
+}
+
+int __cdecl main(int argc, char* argv[], char* envp[]) 
+{
+
+    return Lab2(argc, argv);
 }
