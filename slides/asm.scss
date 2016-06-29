@@ -1,0 +1,96 @@
+@import "bourbon/bourbon";
+
+
+.split-table table {
+	@include border-top-radius(5px);
+	@include border-bottom-radius(5px);
+	@include border-left-radius(5px);
+	@include border-right-radius(5px);
+	@include border-style(thick);
+	box-shadow: 2px 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+.split-table td {
+	padding: 10px;
+	@include border-style(solid);
+} 	
+
+.shrink-table td {
+	font-size: 10pt;	
+}
+
+.instruction-table td {
+	padding: 5px;
+	font-size: 10pt;
+}
+
+.flex-image img {
+	@include display(inline-flex);
+	@include justify-content(flex-end);
+	width:175%;
+	height: auto;
+}
+
+.shrink-image img {
+	width: 50%;
+	height: auto;
+}
+
+.block-image img {
+	background-color: #ffffff;
+	@include border-top-radius(5px);
+	@include border-bottom-radius(5px);
+	@include border-left-radius(5px);
+	@include border-right-radius(5px);
+	@include border-style(solid);
+	box-shadow: 2px 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+.flex-image p {
+	font-size: 8pt;
+}
+
+.windbg pre {
+	font-size: 12pt;
+}
+
+pre {
+	color: black;
+	text-shadow:  0.5px 0.5px 1px #eaf2f4;
+	@include border-style(thin thin thin);
+	@include border-top-radius(5px);
+	@include border-right-radius(5px);
+	@include border-bottom-radius(5px);
+	@include border-left-radius(5px);
+	@include border-color(#70696e #70696e #70696e #70696e);
+	@include padding(20px 50px 20px 20px);
+	@include align-items(stretch);
+	background-color: #ffffff;
+	box-shadow: 2px 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+pre > span {
+	@include word-wrap;
+}
+
+h1 {
+	text-align: center;
+	font-family: Palatino Linotype, Book Antiqua, Palatino, serif;
+	color: #110c3a;
+}
+
+div {
+	font-family: Arial, Helvetica, sans-serif;
+	text-shadow: 0.5px 0.5px 2px black; 
+}
+
+li {
+	@include padding(1em null null null);
+}
+
+body {
+	@include background(radial-gradient(#eaeaea, #eaeaef));
+	font-size: modular-scale(2);
+	color: #110c3a;
+}
+

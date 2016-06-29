@@ -215,6 +215,8 @@ Symbols and Modules
 
 ----
 
+:class: windbg
+
 Example: Examining Exported Symbols
 ===================================
 
@@ -255,6 +257,8 @@ Searching
 
 ----
 
+:class: windbg
+
 Registers and Pointers
 ======================
 
@@ -283,6 +287,8 @@ Examining a pointer in a register:
 
 ----
 
+:class: windbg
+
 Disassembling
 =============
 
@@ -301,15 +307,15 @@ Disassembling
 	77268070          ntdll!ZwQuerySystemInformationEx (<no parameter info>)
 	0:000> u 77266f30          
 	ntdll!NtQuerySystemInformation:
-	77266f30 b836000000      mov     eax,36h
-	77266f35 bab0b52777      mov     edx,offset ntdll!Wow64SystemServiceCall (7727b5b0)
-	77266f3a ffd2            call    edx
-	77266f3c c21000          ret     10h
-	77266f3f 90              nop
+	77266f30 b836000000  mov   eax,36h
+	77266f35 bab0b52777  mov   edx,offset ntdll!Wow64SystemServiceCall (7727b5b0)
+	77266f3a ffd2        call  edx
+	77266f3c c21000      ret   10h
+	77266f3f 90          nop
 	ntdll!NtOpenSection:
-	77266f40 b837000000      mov     eax,37h
-	77266f45 bab0b52777      mov     edx,offset ntdll!Wow64SystemServiceCall (7727b5b0)
-	77266f4a ffd2            call    edx
+	77266f40 b837000000  mov   eax,37h
+	77266f45 bab0b52777  mov   edx,offset ntdll!Wow64SystemServiceCall (7727b5b0)
+	77266f4a ffd2        call  edx
 
 ----
 
@@ -322,14 +328,6 @@ Single step-in/over:
 * (windbg) p 		- Step Over
 
 More complex step operations:
-0:000> r
-eax=00d610bc ebx=00000000 ecx=771049b3 edx=00000000 esi=00000001 edi=00d6367c
-eip=00d61251 esp=000cfc58 ebp=000cfc58 iopl=0         nv up ei pl nz na po nc
-cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000202
-demo!main+0x31:
-00d61251 cc              int     3
-0:000> da @eax
-00d610bc  "abcdef"
 
 * (windbg) tc/pc 	- Trace or Step to Call
 * (windbg) tb 		- Trace to next branch (jmp or jcc)
@@ -350,6 +348,8 @@ Windbg can directly edit memory during operation
 
 
 ----
+
+:class: windbg
 
 Hypothetical Crackme
 ====================
@@ -384,6 +384,8 @@ Hypothetical Crackme
 	* How can we fix this, so that the "je" path gets taken?
 
 ----
+
+:class: windbg
 
 Patching Some Bytes
 ===================
@@ -433,6 +435,8 @@ Memory Window (Part 2)
 
 ----
 
+:class: windbg
+
 Result
 ======
 
@@ -465,6 +469,8 @@ And Finally...
 
 ----
 
+:class: windbg
+
 Alternatively...
 ================
 
@@ -487,6 +493,8 @@ Once we get here:
 
 
 ----
+
+:class: windbg
 
 Assembling
 ==========
