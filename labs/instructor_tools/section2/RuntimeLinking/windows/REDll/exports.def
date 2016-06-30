@@ -1,0 +1,4 @@
+LIBRARY
+EXPORTS
+	export_by_ord	@1	NONAME
+	ExportedByName	@10

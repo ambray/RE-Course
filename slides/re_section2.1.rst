@@ -214,9 +214,15 @@ in place of memcpy
 
 ----
 
-Lab 6
+Lab 3
 =====
 
+Crackme
+
+Lab 3a
+======
+
+From Assembly to C
 
 ----
 
