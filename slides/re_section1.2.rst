@@ -170,13 +170,8 @@ Other Useful Things
 
 ----
 
-Labs 2 & 3
-==========
-
-A basic Crack me
-
-Lab 4
-=====
+Labs 1a & 1b
+============
 
 From Assembly to C
 
@@ -323,6 +318,15 @@ Stack Allocations
 
 ----
 
-Lab 5
+Lab 2
 =====
+
+Crackme Part 2
+
+Labs 2a & 2b
+============
+
+From Assembly to C
+
+
 
