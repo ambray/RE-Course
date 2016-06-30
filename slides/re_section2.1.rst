@@ -363,7 +363,22 @@ Linux - Loading a Library
 
 ----
 
+Python
+======
+
+* The ctypes library in Python provides an easy way to load and call exported methods
+* Note that the architecture of Python (32 vs 64 bit) MUST match the architecture of the DLL
+
+.. code:: python
+
+	import ctypes
+
+	c = ctypes.CDLL("mydll.dll")
+	c[1]() # Calling the method exported at ordinal 1
+	c["MyFunc"]() # calling the method "MyFunc" exported by name
+
+----
+
 Lab - Runtime Linking
 =====================
 
-// TODO: Finish windows lab
