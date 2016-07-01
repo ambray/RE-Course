@@ -382,3 +382,7 @@ Python
 Lab - Runtime Linking
 =====================
 
+Labs 4a & 4b
+============
+
+From Assembly to C

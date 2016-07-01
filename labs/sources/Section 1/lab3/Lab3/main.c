@@ -1,64 +1,70 @@
+#include <Windows.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <Windows.h>
 
-#define BUFFER_SIZE 512
-char buffer[BUFFER_SIZE];
-//char magicStr[] = "Hey dev, Without you my world is NULL.";
-char magicStr[] = "bOS\nNO\\\x06\n}C^BE_^\nSE_\nGS\n]EXFN\nCY\nd\x7f\x66\x66\x04"; //xor with 42
-#define XOR_KEY 42
+#define LB_UPPER		0x41
+#define UB_UPPER		0x5a
 
-HANDLE openFile(LPCTSTR filename) {
-    return CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+#define LB_LOWER		0x61
+#define UB_LOWER		0x7a
+
+char rotate(char x)
+{
+	int basis = 0;
+
+	if(x <= UB_UPPER && x >= LB_UPPER) {
+		basis = LB_UPPER;
+	} else if(x <= UB_LOWER && x >= LB_LOWER) {
+		basis = LB_LOWER;
+	} else {
+		return x;
+	}
+	
+	return (((x - basis) + 13) % 26) + basis;
 }
 
-void deoffuscate(char* buffer, int size) {
-    int magicSize = 0;
-    int i;
-    if (magicSize > size) {
-        printf("Your heart is too small.\n");
-        return;
-    }
+char* r13(char* buf, size_t size)
+{
+	char* tmp = NULL;
+	int i = 0;
 
-    memset(buffer, 0, size);
+	if(NULL == buf)
+		return NULL;
 
-    magicSize = strlen(magicStr);
-    for (i = 0; i < magicSize; ++i) {
-        buffer[i] = magicStr[i] ^ 42;
-    }
+	if(NULL == (tmp = (char*)malloc(size + 1))) {
+		printf("[x] Out of memory!\n");
+		return NULL;
+	}
+
+	memset(tmp, 0x00, size+1);
+
+	for(; buf[i] != '\0'; ++i) {
+		tmp[i] = rotate(buf[i]);
+	}
+
+
+	return tmp;
 }
 
-void __declspec(dllexport) Lab3() {
-    HANDLE hFile = openFile("C:\\badlove.dat");
-    DWORD bytesRead = 0;
-    DWORD err = 0;
-    char magic[BUFFER_SIZE] = { 0 };
+void __declspec(dllexport) __cdecl Lab3a()
+{
+	char* tmp = NULL;
+	//char* init = "This is indeed the key. You have found clearly found it, and succeeded at this challenge.";
+	char* init = "Guvf vf vaqrrq gur xrl. Lbh unir sbhaq pyrneyl sbhaq vg, naq fhpprrqrq ng guvf punyyratr.";
+	char* first = "Qrpbqr zr";
 
-    memset(buffer, 0, BUFFER_SIZE);
+	if(NULL == (tmp = (char*)r13(first, strlen(first)))) {
+		printf("Failed!\n");
+		return;
+	}
 
-    if (hFile == INVALID_HANDLE_VALUE) {
-        err = GetLastError();
-        printf("My love is lost\n");
-        exit(0);
-    }
+	printf("%s: %s\n", tmp, init);
 
-    if (!ReadFile(hFile, buffer, BUFFER_SIZE, &bytesRead, NULL)) {
-        printf("I can't read your love\n");
-        exit(0);
-    }
-
-    deoffuscate(magic, BUFFER_SIZE);
-    if (strstr(buffer, magic)) {
-        printf("You have a const pointer to my microprocessor.\n");
-        printf("Congrats... your done!\n");
-    }
-    else {
-        printf("What is? %s\n", buffer);
-    }
+	free(tmp);
 }
 
-int __cdecl main(int argc, char* argv[]) {
-
-    Lab3();
-    return 0;
+int __cdecl main(int argc, char** argv, char** envp)
+{
+	Lab3a();
+	return 0;
 }
