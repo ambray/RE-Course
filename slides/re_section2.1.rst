@@ -45,8 +45,8 @@ Parsing
 
 ----
 
-Where too from here?
-====================
+Where to go from here?
+======================
 
 * Several transformations typically applied
 	+ the original AST gets changed a bit, losing context
@@ -382,7 +382,6 @@ Python
 Lab - Runtime Linking
 =====================
 
-Labs 4a & 4b
-============
+Labs 4, 4a, & 4b
+================
 
-From Assembly to C
