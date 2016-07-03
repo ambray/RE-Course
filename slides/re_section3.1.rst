@@ -1105,7 +1105,25 @@ Viewing Exports (cont'd)
 More pefile Tricks
 ==================
 
-// TODO: add more sections and some labs!
+* PEFile can additionally be used to read and modify data within a file
+* Access RVA values via get\_\*_from\_rva(...)
+* Modify via set\_\*_at\_rva(...)
+Example:
+
+.. code:: python
+
+	>>> p = pefile.PE("REDll.dll")
+	>>> p.get_string_from_rva(p.DIRECTORY_ENTRY_EXPORT.struct.Name)
+	'REDll.dll'
+
+----
+
+PEFile Lab
+==========
+
+* Write a Python script using PEFile to enumerate all imports and exports from Kernel32.dll, KernelBase.dll, and ntdll.dll, and store the results in a text file.
+
+* Additionally, enumerate the sections in each of those files.
 
 ----
 
