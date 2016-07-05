@@ -274,3 +274,47 @@ Duff's Device - The Solution
     	}
 	}
 
+
+----
+
+Structured Exception Handling (SEH)
+===================================
+
+* Provides a mechanism for managing exceptional conditions via C
+* Has some semantic differences from C++ style exception handling
+* Can allow recovery from events such as:
+	+ Bad memory accesses (e.g., segmentation faults)
+	+ Divide by zero errors
+	+ ...
+
+----
+
+SEH Examples
+============
+
+.. code:: c
+
+	char* badptr = NULL;
+
+	__try {
+		printf("We're trying to do some stuff here...\n");
+		printf("Bad memory access: %c\n", *badptr);
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER) {
+		printf("An exception occurred! 0x%x\n", GetExceptionCode());
+	}
+
+
+Output:
+
+.. code::
+
+	We're trying to do some stuff here...
+	An exception occurred! 0xc0000005
+
+----
+
+SEH Details
+===========
+
+
