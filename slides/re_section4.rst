@@ -317,4 +317,25 @@ Output:
 SEH Details
 ===========
 
+The stack frame disassembly:
+
+.. image:: ./img/SEH_p1.png
+
+----
+
+SEH Details (cont'd)
+====================
+
+SEH Thunk (w/ jump to supporting method):
+
+.. image:: ./img/SEH_thunk.png
+
+----
+
+SEH Details (cont'd)
+====================
+
+Exception Handler:
+
+.. image:: ./img/SEH_handler.png
 
