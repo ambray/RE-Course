@@ -339,3 +339,23 @@ Exception Handler:
 
 .. image:: ./img/SEH_handler.png
 
+----
+
+SEH Details (cont'd)
+====================
+
+* Stack frame layout is much further complicated with this construct
+* Implementation actually varies a bit between VS compiler versions
+* Newer SEH versions (such as the one we see here) provide additional buffer overrun protections
+
+----
+
+:class: flex-image
+
+SEH Stack Layout
+================
+
+.. image:: ./img/igor1_seh4_stack_layout.gif
+
+Image Credit: igorsk - http://www.openrce.org/articles/full_view/21
+
