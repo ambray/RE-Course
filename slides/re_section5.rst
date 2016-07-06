@@ -450,15 +450,6 @@ Translates to:
 Templates
 =========
 
-----
-
-Exceptions
-==========
-
-----
-
-Structured Exception Handling (SEH)
-===================================
 
 ----
 
