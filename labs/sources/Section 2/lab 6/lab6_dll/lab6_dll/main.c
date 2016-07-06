@@ -5,11 +5,16 @@
 #include <stdio.h>
 
 
+
 typedef struct BEEP_VAL_ {
 	DWORD	Frequency;
 	DWORD	Duration;
-} BEEP_VAL;
+} BEEP_VAL, *PBEEP_VAL;
 
+typedef struct BEEP_TASK_ {
+	PBEEP_VAL	BeepList;
+	size_t		ListSize;
+} BEEP_TASK, *PBEEP_TASK;
 
 typedef enum LabReturn_ {
 	LabSuccess = 0,
@@ -19,6 +24,61 @@ typedef enum LabReturn_ {
 	LabNotFound,
 } LabReturn;
 
+BEEP_VAL sw[] = {
+	{ 440,500 },
+	{ 440,500 },
+	{ 440,500 },
+	{ 349,350 },
+	{ 523,150 },
+	{ 440,500 },
+	{ 349,350 },
+	{ 523,150 },
+	{ 440,1000 },
+	{ 659,500 },
+	{ 659,500 },
+	{ 659,500 },
+	{ 698,350 },
+	{ 523,150 },
+	{ 415,500 },
+	{ 349,350 },
+	{ 523,150 },
+	{ 523,150 },
+};
+
+BEEP_VAL harvest[] = {
+	{ 329,300 },
+	{ 493,300 },
+	{ 698,300 },
+	{ 659,600 },
+	{ 783,300 },
+	{ 698,300 },
+	{ 659,600 },
+	{ 329,100 },
+	{ 493,300 },
+	{ 698,300 },
+	{ 659,600 },
+	{ 392,250 },
+	{ 440,200 },
+	{ 587,300 },
+	{ 349,250 },
+	{ 587,500 },
+	{ 329,300 },
+	{ 493,300 },
+	{ 698,300 },
+	{ 659,600 },
+	{ 783,300 },
+	{ 698,300 },
+	{ 659,600 },
+	{ 329,100 },
+	{ 493,300 },
+	{ 698,300 },
+	{ 659,600 },
+	{ 392,250 },
+	{ 440,200 },
+	{ 587,300 },
+	{ 349,250 },
+	{ 587,400 },
+};
 
 BEEP_VAL m3[] = {
 	{ 1480,200 },
@@ -396,12 +456,16 @@ Cleanup:
 	return LabSuccess;
 }
 
-static DWORD WINAPI m3_func(void* a)
+static DWORD WINAPI m3_func(PBEEP_TASK task)
 {
 	int i = 0;
-	for (i = 0; i < sizeof(m3) / sizeof(BEEP_VAL); ++i) {
-		if (m3[i].Frequency == 0) {
-			Sleep((m3[i].Duration == 0) ? 200 : 400);
+
+	if (NULL == task)
+		return (DWORD)-1;
+
+	for (i = 0; i < task->ListSize; ++i) {
+		if (task->BeepList[i].Frequency == 0) {
+			Sleep((task->BeepList[i].Duration == 0) ? 200 : 400);
 		} 
 
 		Beep(m3[i].Frequency, m3[i].Duration);
@@ -412,7 +476,14 @@ static DWORD WINAPI m3_func(void* a)
 
 LabReturn __declspec(dllexport) WINAPI Lab6d(UINT value)
 {
-	HANDLE hThread = NULL;
+	HANDLE		hThread = NULL;
+	PBEEP_TASK	pTask = NULL;
+
+
+	if (NULL == (pTask = (PBEEP_TASK)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(*pTask)))) {
+		logger("Out of memory!", ERROR_OUTOFMEMORY, TRUE);
+		return LabNoMemory;
+	}
 
 	switch (value) {
 	case 0:
@@ -421,16 +492,38 @@ LabReturn __declspec(dllexport) WINAPI Lab6d(UINT value)
 		MessageBox(NULL, "This is not the value you are looking for, but almost!", "NOT QUITE!", MB_ICONERROR);
 		break;
 	case 5:
-		if (NULL == (hThread = CreateThread(NULL, 0, m3_func, NULL, 0, NULL))) {
+		pTask->BeepList = m3;
+		pTask->ListSize = sizeof(m3) / sizeof(BEEP_VAL);
+		if (NULL == (hThread = CreateThread(NULL, 0, m3_func, pTask, 0, NULL))) {
 			logger("Thread creation failed!", GetLastError(), TRUE);
 			break;
 		}
 		WaitForSingleObject(hThread, INFINITE);
-		CloseHandle(hThread);
+		break;
+	case 6:
+		pTask->BeepList = harvest;
+		pTask->ListSize = sizeof(harvest) / sizeof(BEEP_VAL);
+		if (NULL == (hThread = CreateThread(NULL, 0, m3_func, pTask, 0, NULL))) {
+			logger("Thread creation failed!", GetLastError(), TRUE);
+			break;
+		}
+		WaitForSingleObject(hThread, INFINITE);
+		break;
+	case 7:
+		pTask->BeepList = sw;
+		pTask->ListSize = sizeof(sw) / sizeof(BEEP_VAL);
+		if (NULL == (hThread = CreateThread(NULL, 0, m3_func, pTask, 0, NULL))) {
+			logger("Thread creation failed!", GetLastError(), TRUE);
+			break;
+		}
+		WaitForSingleObject(hThread, INFINITE);
 		break;
 	default:
 		logger("Invalid input provided!", LabBadParam, FALSE);
 	}
 
+	if (NULL != hThread)
+		CloseHandle(hThread);
+	HeapFree(GetProcessHeap(), 0, pTask);
 	return LabSuccess;
 }
