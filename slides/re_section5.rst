@@ -493,23 +493,14 @@ References
 Additional Topics
 =================
 
-As time permits...
+* Anti-debugging Techniques
+	+ Many good references available
+	+ Some techniques more obscure/harder to identify than others
+Some good compendiums on the topic:
 
-----
+http://pferrie.host22.com/papers/antidebug.pdf
+http://www.openrce.org/reference_library/anti_reversing
 
-Objectives
-==========
-
-* Rust
-* Go
-* Crypto Constants
-* Anti-debugging techniques
-* Forensics?
-* ??
-
-----
-
-// EMPTY
 
 ----
 
