@@ -450,20 +450,8 @@ Translates to:
 Templates
 =========
 
-
-----
-
-C++ Exceptions
-==============
-
-----
-
-\*nix Exceptions
-================
-
-* Vary a bit by implementation
-* Some older implementations relied on setjmp/longjmp
-* Newer libs typically take a table-based approach (similar to Microsoft's)
+* Templated code will at least be copied once for each implementation type
+* Often inlined
 
 ----
 
@@ -474,13 +462,16 @@ Run Time Type Information
 	+ Exceptions
 	+ dynamic_cast
 	+ typeid
+	+ type_info
 * Typically only required for polymorphic classes (i.e., classes with virtual member functions)
 
 ----
 
-Microsoft's RTTI Implementation
-===============================
+RTTI (cont'd)
+=============
 
+* Often results in string and type information being embedded in the binary
+* Type descriptions tend to be compiler specific
 
 ----
 
