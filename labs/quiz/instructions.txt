@@ -1,0 +1,6 @@
+One method is exported from this DLL. Figure out:
+
+1.) What input will trigger it to perform some sort of action
+2.) What actions it is capable of.
+
+**Remember: Good places to look (once you figure out the first function) might include strings and what methods the DLL imports 
