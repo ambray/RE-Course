@@ -1,0 +1,2 @@
+* Fix broken imports in the DLL so that it will be loadable.
+* MSDN might be helpful in determining which DLL the imported functions (under the bad entry) should belong in
