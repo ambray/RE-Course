@@ -1,0 +1,10 @@
+Lab3 Directions
+===============
+
+3: Run Lab3, observe the output. Upon loading the binary in IDA, observe the two obfuscated strings. Note that one will get de-obfuscated when it gets printed, while the other does not. How can you unpack the remaining obfuscated string?
+
+3a: Convert the exported Lab3a method from assembly to C
+
+3b: Convert the exported LabX method from assembly to C
+
+3c: Starting inside the exported LabX method, find a way to get the "Success!" MessageBox to pop up. HINT: Procmon may be helpful in this exercise.
