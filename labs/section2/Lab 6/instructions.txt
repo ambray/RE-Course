@@ -1,0 +1,1 @@
+A number of functions have been exported by the provided DLL. You must determine what each function does, and write a program that will call each one with appropriate input.
