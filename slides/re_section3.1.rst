@@ -1108,6 +1108,7 @@ More pefile Tricks
 * PEFile can additionally be used to read and modify data within a file
 * Access RVA values via get\_\*_from\_rva(...)
 * Modify via set\_\*_at\_rva(...)
+
 Example:
 
 .. code:: python
