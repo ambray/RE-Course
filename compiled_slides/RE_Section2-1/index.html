@@ -47,7 +47,7 @@
     <span class="k">return</span> <span class="n">errno</span><span class="p">;</span>
   <span class="p">}</span>
   <span class="c1">// again, we get our function pointer
-</span>  <span class="n">myexport</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="kt">int</span><span class="p">)))</span><span class="n">dlsym</span><span class="p">(</span><span class="n">hm</span><span class="p">,</span> <span class="s">"myExportedFunction"</span><span class="p">);</span>
+</span>  <span class="n">myexport</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="kt">int</span><span class="p">))</span><span class="n">dlsym</span><span class="p">(</span><span class="n">hm</span><span class="p">,</span> <span class="s">"myExportedFunction"</span><span class="p">);</span>
   <span class="k">if</span><span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">myexport</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">printf</span><span class="p">(</span><span class="s">"Failed to find our func! %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
     <span class="k">return</span> <span class="n">errno</span><span class="p">;</span>

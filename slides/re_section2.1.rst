@@ -349,7 +349,7 @@ Linux - Loading a Library
 	    return errno;
 	  }
 	  // again, we get our function pointer
-	  myexport = (int(*)(int)))dlsym(hm, "myExportedFunction");
+	  myexport = (int(*)(int))dlsym(hm, "myExportedFunction");
 	  if(NULL == myexport) {
 	    printf("Failed to find our func! %s\n", strerror(errno));
 	    return errno;
