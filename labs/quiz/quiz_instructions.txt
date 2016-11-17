@@ -1,0 +1,8 @@
+One method is exported from this DLL. In order to accomplish this lab, you will need to do the following:
+
+1.) Create a text file documenting what actions the exported function is capable of, and what input will cause it to do those things
+2.) Create a program that will load and execute the exported function
+
+At the end of the quiz, email the completed documents to the instructor staff.
+
+**Remember: Good places to look (once you figure out the first function) might include strings and what methods the DLL imports 
