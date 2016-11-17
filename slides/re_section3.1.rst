@@ -1114,7 +1114,7 @@ Example:
 .. code:: python
 
 	>>> p = pefile.PE("REDll.dll")
-	>>> p.get_string_from_rva(p.DIRECTORY_ENTRY_EXPORT.struct.Name)
+	>>> p.get_string_at_rva(p.DIRECTORY_ENTRY_EXPORT.struct.Name)
 	'REDll.dll'
 
 ----
