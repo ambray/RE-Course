@@ -496,6 +496,7 @@ Additional Topics
 * Anti-debugging Techniques
 	+ Many good references available
 	+ Some techniques more obscure/harder to identify than others
+	
 Some good compendiums on the topic:
 
 http://pferrie.host22.com/papers/antidebug.pdf
